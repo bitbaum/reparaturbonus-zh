@@ -89,7 +89,7 @@ export default function Header() {
               onClick={closeMobileMenu}
             >
               <Image
-                src="/logo/logo-main-header.png"
+                src="/logo/logo_main_light_transparent.png"
                 alt="Stadt Zürich Reparaturbonus"
                 width={scrolled ? 120 : 140}
                 height={scrolled ? 30 : 35}

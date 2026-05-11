@@ -21,12 +21,12 @@ export const metadata: Metadata = {
   description: "Finden Sie die beste Werkstatt in Zürich und nutzen Sie CHF 100 Reparaturbonus der Stadt. Nachhaltig, günstig und umweltfreundlich.",
   icons: {
     icon: [
-      { url: "/logo/favicon_emblem_final (1).ico", sizes: "any" },
-      { url: "/logo/favicon_emblem_final_16 (1).png", type: "image/png", sizes: "16x16" },
-      { url: "/logo/favicon_emblem_final_48 (1).png", type: "image/png", sizes: "48x48" },
+      { url: "/logo/favicon.ico", sizes: "any" },
+      { url: "/logo/favicon_16.png", type: "image/png", sizes: "16x16" },
+      { url: "/logo/favicon_48.png", type: "image/png", sizes: "48x48" },
     ],
-    shortcut: "/logo/favicon_emblem_final (1).ico",
-    apple: "/logo/favicon_emblem_final_48 (1).png",
+    shortcut: "/logo/favicon.ico",
+    apple: "/logo/favicon_48.png",
   },
 };
 

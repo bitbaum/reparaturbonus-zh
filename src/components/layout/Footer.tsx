@@ -15,7 +15,7 @@ export default function Footer() {
                 className="inline-block group hover:opacity-80 transition-opacity duration-200"
               >
                 <Image
-                  src="/logo/logo-transparent.png"
+                  src="/logo/logo_main_dark_transparent.png"
                   alt="Stadt Zürich Reparaturbonus"
                   width={200}
                   height={50}
