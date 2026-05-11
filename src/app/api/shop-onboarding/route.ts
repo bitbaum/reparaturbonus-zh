@@ -11,11 +11,9 @@ export async function POST(request: NextRequest) {
       postalCode,
       phone,
       email,
-      website,
       category,
       contactPerson,
       legalForm,
-      insurance,
       specializations
     } = body
 

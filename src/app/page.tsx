@@ -291,7 +291,7 @@ export default function Home() {
       {step === 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">So einfach funktioniert's</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">So einfach funktioniert&apos;s</h2>
             <p className="text-xl text-gray-600">In 3 Schritten zu Ihrer Reparatur mit Bonus</p>
           </div>
             

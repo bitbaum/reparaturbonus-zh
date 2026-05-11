@@ -37,7 +37,7 @@ export default function Dashboard() {
     const sessionData = useSession()
     session = sessionData.data
     status = sessionData.status
-  } catch (error) {
+  } catch {
     console.log('Session provider not available in dashboard')
   }
   

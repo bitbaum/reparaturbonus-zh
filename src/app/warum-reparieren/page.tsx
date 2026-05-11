@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDownIcon, ChevronUpIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { 
   CurrencyEuroIcon, 
   GlobeEuropeAfricaIcon, 
@@ -14,7 +14,7 @@ import {
 import { useRouter } from 'next/navigation';
 
 interface BenefitCardProps {
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   example: string;
@@ -37,11 +37,6 @@ interface FAQItemProps {
   sources?: string[];
 }
 
-const REPAIR_CATEGORIES = [
-  { id: 'electronics', label: 'Elektro und Elektronik', icon: '📱', examples: ['Smartphone', 'Laptop', 'Tablet', 'Kopfhörer', 'Kaffeemaschine', 'Toaster'] },
-  { id: 'clothing', label: 'Kleidung', icon: '👕', examples: ['Jacke', 'Hose', 'T-Shirt', 'Tasche'] },
-  { id: 'shoes', label: 'Schuhe', icon: '👟', examples: ['Sneaker', 'Stiefel', 'Sandalen', 'Absätze'] }
-];
 
 const BenefitCard: React.FC<BenefitCardProps> = ({ 
   icon: Icon, 
@@ -335,9 +330,9 @@ export default function WarumReparierenPage() {
                 </div>
               </div>
               <p className="text-gray-700 text-sm leading-relaxed">
-                "Unsere 8 Jahre alte Waschmaschine war defekt. Statt CHF 1'200 für eine neue 
-                auszugeben, liessen wir sie für CHF 180 reparieren. Sie läuft jetzt seit 
-                2 Jahren einwandfrei weiter."
+                &quot;Unsere 8 Jahre alte Waschmaschine war defekt. Statt CHF 1&apos;200 für eine neue
+                auszugeben, liessen wir sie für CHF 180 reparieren. Sie läuft jetzt seit
+                2 Jahren einwandfrei weiter.&quot;
               </p>
             </div>
             
@@ -352,8 +347,8 @@ export default function WarumReparierenPage() {
                 </div>
               </div>
               <p className="text-gray-700 text-sm leading-relaxed">
-                "Als Student konnte ich mir keinen neuen Laptop leisten. Die Reparatur 
-                kostete nur CHF 220 statt CHF 1'500 für einen neuen. Perfekte Lösung!"
+                &quot;Als Student konnte ich mir keinen neuen Laptop leisten. Die Reparatur
+                kostete nur CHF 220 statt CHF 1&apos;500 für einen neuen. Perfekte Lösung!&quot;
               </p>
             </div>
           </div>

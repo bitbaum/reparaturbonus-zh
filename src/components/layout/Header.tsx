@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
-import dynamic from 'next/dynamic'
 import { ROUTES } from '@/lib/constants/routes'
 import { CATEGORY_LABELS, SHOP_CATEGORIES } from '@/lib/constants/categories'
 import Image from 'next/image'
@@ -18,7 +17,7 @@ export default function Header() {
     const sessionData = useSession()
     session = sessionData.data
     status = sessionData.status
-  } catch (error) {
+  } catch {
     // Session provider not available during build
     console.log('Session provider not available')
   }
@@ -27,9 +26,6 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [werkstattenDropdownOpen, setWerkstattenDropdownOpen] = useState(false)
   
-  // Add safe fallback for build/SSR
-  const isLoading = status === 'loading'
-
   useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 20

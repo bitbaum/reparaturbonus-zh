@@ -37,7 +37,7 @@ export default function AdminDashboard() {
   try {
     const sessionData = useSession()
     session = sessionData.data
-  } catch (error) {
+  } catch {
     console.log('Session provider not available in admin')
   }
   const [stats, setStats] = useState<AdminStats | null>(null)
