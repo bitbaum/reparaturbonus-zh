@@ -27,7 +27,7 @@
     "next": "^15.5.9",
     "next-auth": "^4.24.11",
     "prisma": "^6.10.0",
-    "react": "^19.0.0",
+    "react": "^19.2.7",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.3.1"
   },
