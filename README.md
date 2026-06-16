@@ -5,7 +5,7 @@ Connecting Zurich residents with certified repair shops through government-subsi
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-000.svg)](https://nextjs.org/)
-[![Live](https://img.shields.io/badge/Live-reparaturbonus--zh.vercel.app-green.svg)](https://reparaturbonus-zh.vercel.app)
+[![Live](https://img.shields.io/badge/Live-reparaturbonus.orangecat.ch-green.svg)](https://reparaturbonus.orangecat.ch)
 
 ## What It Does
 
@@ -80,7 +80,7 @@ Three enums enforce domain constraints at the database level:
 | Database | PostgreSQL + Prisma 6 |
 | Auth | NextAuth.js, JWT, bcryptjs |
 | Styling | Tailwind CSS 4 |
-| Deployment | Vercel |
+| Deployment | Self-hosted (Hetzner, Caddy, Next.js standalone) |
 
 ---
 
@@ -95,7 +95,7 @@ Three enums enforce domain constraints at the database level:
 ### Setup
 
 ```bash
-git clone https://github.com/g-but/reparaturbonus-zh.git
+git clone https://github.com/maonakamoto/reparaturbonus-zh.git
 cd reparaturbonus-zh
 cp .env.example .env.local    # configure DATABASE_URL, NEXTAUTH_SECRET
 npm install
