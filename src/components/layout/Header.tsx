@@ -5,8 +5,10 @@ import { useSession, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import { ROUTES } from '@/lib/constants/routes'
 import { CATEGORY_LABELS, SHOP_CATEGORIES } from '@/lib/constants/categories'
+import { CATEGORY_ICONS } from '@/lib/constants/category-icons'
 import Image from 'next/image'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import { Store } from 'lucide-react'
 
 export default function Header() {
   // Temporarily disable session for build - add error handling
@@ -52,17 +54,9 @@ export default function Header() {
     return `/shops?category=${category.toUpperCase()}`
   }
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case SHOP_CATEGORIES.ELECTRONICS:
-        return '💻'
-      case SHOP_CATEGORIES.CLOTHING:
-        return '👔'
-      case SHOP_CATEGORIES.SHOES:
-        return '👞'
-      default:
-        return '🛠️'
-    }
+  const CategoryIcon = ({ category, className }: { category: string; className?: string }) => {
+    const Icon = CATEGORY_ICONS[category as keyof typeof CATEGORY_ICONS] ?? CATEGORY_ICONS.ALL
+    return <Icon className={className} />
   }
 
   return (
@@ -98,7 +92,7 @@ export default function Header() {
           {/* Mobile menu button */}
           <button
             onClick={toggleMobileMenu}
-            className="md:hidden flex items-center justify-center w-8 h-8 text-gray-700 hover:text-indigo-600 focus:outline-none"
+            className="md:hidden flex items-center justify-center w-8 h-8 text-gray-700 hover:text-brand focus:outline-none"
             aria-label="Toggle mobile menu"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +114,7 @@ export default function Header() {
             >
               <Link 
                 href={ROUTES.SHOPS} 
-                className={`flex items-center space-x-1 text-gray-700 hover:text-indigo-600 font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-indigo-600 after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap py-2 ${
+                className={`flex items-center space-x-1 text-gray-700 hover:text-brand font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap py-2 ${
                   scrolled ? 'text-sm' : 'text-sm lg:text-base'
                 }`}
               >
@@ -135,32 +129,32 @@ export default function Header() {
                 <div className="px-3">
                   <Link
                     href={ROUTES.SHOPS}
-                    className="flex items-center px-3 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors rounded-lg"
+                    className="flex items-center px-3 py-3 text-text hover:bg-brand-soft hover:text-brand transition-colors rounded-btn"
                   >
-                    <span className="text-lg mr-3">🏪</span>
+                    <Store className="h-5 w-5 mr-3 text-text-muted" />
                     <div>
                       <div className="font-medium">Alle Werkstätten</div>
-                      <div className="text-xs text-gray-500">Gesamte Übersicht</div>
+                      <div className="text-xs text-text-muted">Gesamte Übersicht</div>
                     </div>
                   </Link>
-                  
-                  <div className="border-t border-gray-100 my-2"></div>
-                  
+
+                  <div className="border-t border-border my-2"></div>
+
                   <div className="mb-3">
-                    <div className="px-3 py-1 text-xs font-semibold text-green-600 uppercase tracking-wide">
+                    <div className="px-3 py-1 text-xs font-semibold text-action uppercase tracking-wide">
                       Mit Reparaturbonus (CHF 100)
                     </div>
                     {[SHOP_CATEGORIES.ELECTRONICS, SHOP_CATEGORIES.CLOTHING, SHOP_CATEGORIES.SHOES].map((category) => (
                       <Link
                         key={category}
                         href={getCategoryPath(category)}
-                        className="flex items-center px-3 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors rounded-lg"
+                        className="flex items-center px-3 py-2 text-text hover:bg-brand-soft hover:text-brand transition-colors rounded-btn"
                       >
-                        <span className="text-lg mr-3">{getCategoryIcon(category)}</span>
+                        <CategoryIcon category={category} className="h-5 w-5 mr-3 text-text-muted" />
                         <div className="flex-1">
                           <div className="font-medium text-sm">{CATEGORY_LABELS[category]}</div>
                         </div>
-                        <div className="text-xs text-green-600 font-medium">CHF 100</div>
+                        <div className="text-xs text-action font-medium">CHF 100</div>
                       </Link>
                     ))}
                   </div>
@@ -170,7 +164,7 @@ export default function Header() {
 
             <Link 
               href={ROUTES.HOW_IT_WORKS} 
-              className={`text-gray-700 hover:text-indigo-600 font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-indigo-600 after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
+              className={`text-gray-700 hover:text-brand font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
                 scrolled ? 'text-sm' : 'text-sm lg:text-base'
               }`}
             >
@@ -182,7 +176,7 @@ export default function Header() {
               <>
                 <Link 
                   href={ROUTES.DASHBOARD} 
-                  className={`text-gray-700 hover:text-indigo-600 font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-indigo-600 after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
+                  className={`text-gray-700 hover:text-brand font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
                     scrolled ? 'text-sm' : 'text-sm lg:text-base'
                   }`}
                 >
@@ -192,7 +186,7 @@ export default function Header() {
                 {(session?.user as { role?: string })?.role === 'ADMIN' || (session?.user as { role?: string })?.role === 'SUPER_ADMIN' ? (
                   <Link 
                     href={ROUTES.ADMIN} 
-                    className={`text-gray-700 hover:text-indigo-600 font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-indigo-600 after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
+                    className={`text-gray-700 hover:text-brand font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
                       scrolled ? 'text-sm' : 'text-sm lg:text-base'
                     }`}
                   >
@@ -208,7 +202,7 @@ export default function Header() {
                   </span>
                   <button
                     onClick={handleSignOut}
-                    className={`text-gray-700 hover:text-indigo-600 font-medium transition-all duration-200 whitespace-nowrap ${
+                    className={`text-gray-700 hover:text-brand font-medium transition-all duration-200 whitespace-nowrap ${
                       scrolled ? 'text-sm' : 'text-sm lg:text-base'
                     }`}
                   >
@@ -220,7 +214,7 @@ export default function Header() {
               <div className="flex items-center space-x-2 lg:space-x-4">
                 <Link 
                   href={ROUTES.AUTH.SIGNIN} 
-                  className={`text-gray-700 hover:text-indigo-600 font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-indigo-600 after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
+                  className={`text-gray-700 hover:text-brand font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
                     scrolled ? 'text-sm' : 'text-sm lg:text-base'
                   }`}
                 >
@@ -228,7 +222,7 @@ export default function Header() {
                 </Link>
                 <Link 
                   href={ROUTES.AUTH.SIGNUP} 
-                  className={`bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap ${
+                  className={`bg-action text-on-brand font-medium rounded-btn hover:bg-action-strong transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap ${
                     scrolled ? 'px-2 py-1.5 text-sm' : 'px-3 py-2 text-sm lg:px-4 lg:text-base'
                   }`}
                 >
@@ -245,7 +239,7 @@ export default function Header() {
             <nav className="px-4 py-4 space-y-4">
               <Link 
                 href={ROUTES.SHOPS} 
-                className="block text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2"
+                className="block text-gray-700 hover:text-brand font-medium transition-colors duration-200 py-2"
                 onClick={closeMobileMenu}
               >
                 Reparaturwerkstätten
@@ -253,17 +247,17 @@ export default function Header() {
               
               {/* Mobile category submenu */}
               <div className="pl-4 space-y-2">
-                <div className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-2">
+                <div className="text-xs font-semibold text-action uppercase tracking-wide mb-2">
                   Mit Bonus (CHF 100)
                 </div>
                 {[SHOP_CATEGORIES.ELECTRONICS, SHOP_CATEGORIES.CLOTHING, SHOP_CATEGORIES.SHOES].map((category) => (
                   <Link
                     key={category}
                     href={getCategoryPath(category)}
-                    className="flex items-center text-gray-600 hover:text-green-600 transition-colors duration-200 py-1"
+                    className="flex items-center text-text-muted hover:text-brand transition-colors duration-200 py-1"
                     onClick={closeMobileMenu}
                   >
-                    <span className="mr-2">{getCategoryIcon(category)}</span>
+                    <CategoryIcon category={category} className="h-4 w-4 mr-2" />
                     <span className="text-sm">{CATEGORY_LABELS[category]}</span>
                   </Link>
                 ))}
@@ -271,7 +265,7 @@ export default function Header() {
 
               <Link 
                 href={ROUTES.HOW_IT_WORKS} 
-                className="block text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2"
+                className="block text-gray-700 hover:text-brand font-medium transition-colors duration-200 py-2"
                 onClick={closeMobileMenu}
               >
                 Wie es funktioniert
@@ -282,7 +276,7 @@ export default function Header() {
                 <>
                   <Link 
                     href={ROUTES.DASHBOARD} 
-                    className="block text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2"
+                    className="block text-gray-700 hover:text-brand font-medium transition-colors duration-200 py-2"
                     onClick={closeMobileMenu}
                   >
                     Dashboard
@@ -291,7 +285,7 @@ export default function Header() {
                   {(session?.user as { role?: string })?.role === 'ADMIN' || (session?.user as { role?: string })?.role === 'SUPER_ADMIN' ? (
                     <Link 
                       href={ROUTES.ADMIN} 
-                      className="block text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2"
+                      className="block text-gray-700 hover:text-brand font-medium transition-colors duration-200 py-2"
                       onClick={closeMobileMenu}
                     >
                       Admin
@@ -307,7 +301,7 @@ export default function Header() {
                         handleSignOut()
                         closeMobileMenu()
                       }}
-                      className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2"
+                      className="text-gray-700 hover:text-brand font-medium transition-colors duration-200 py-2"
                     >
                       Abmelden
                     </button>
@@ -317,14 +311,14 @@ export default function Header() {
                 <div className="border-t border-gray-200 pt-4 space-y-2">
                   <Link 
                     href={ROUTES.AUTH.SIGNIN} 
-                    className="block text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 py-2"
+                    className="block text-gray-700 hover:text-brand font-medium transition-colors duration-200 py-2"
                     onClick={closeMobileMenu}
                   >
                     Anmelden
                   </Link>
                   <Link 
                     href={ROUTES.AUTH.SIGNUP} 
-                    className="block bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200 px-4 py-2 text-center"
+                    className="block bg-action text-on-brand font-medium rounded-btn hover:bg-action-strong transition-colors duration-200 px-4 py-2 text-center"
                     onClick={closeMobileMenu}
                   >
                     Registrieren
