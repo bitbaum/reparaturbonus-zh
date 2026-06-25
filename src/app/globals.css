@@ -1,28 +1,83 @@
 @import "tailwindcss";
 
+/* ============================================================================
+   Reparaturbonus Zürich — Design Token SSOT
+   ----------------------------------------------------------------------------
+   ALL visual decisions (colour, radius, shadow) live here as CSS custom
+   properties. Components consume the semantic Tailwind utilities wired up in
+   the @theme block below — never raw hex values.
+
+   Identity: a civic repair-culture service.
+   - Brand  = a confident, official Zürich-adjacent blue (trust anchor)
+   - Action = a warm copper/ochre "mend" accent (handmade / repair)
+   - Eco    = a muted circular-economy green, used sparingly for impact cues
+   - Surface= a soft, warm off-white that reads paper-like and approachable
+   ============================================================================ */
+
+/* Tier 1 — primitive palette. Raw values live ONCE, here. Components never
+   reference these directly; they exist only to feed the semantic tokens. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primitive-blue-900: #0F2E5C;
+  --primitive-blue-700: #1B4A8F;
+  --primitive-blue-50:  #EEF3FA;
+
+  --primitive-copper-700: #9A4E1E;
+  --primitive-copper-500: #C26B2D;
+  --primitive-copper-50:  #FBF1E8;
+
+  --primitive-green-600: #3A8061;
+  --primitive-green-50:  #EEF6F1;
+
+  --primitive-stone-900: #1C1A17;
+  --primitive-stone-500: #6E665C;
+  --primitive-stone-200: #E4DED4;
+  --primitive-stone-100: #EFEAE1;
+  --primitive-paper:     #F7F5F1;
+  --primitive-white:     #FFFFFF;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+/* Tier 2 — semantic tokens, defined directly in @theme so Tailwind v4 both
+   registers the utility (bg-brand, text-action, …) AND exposes the CSS var.
+   Each maps to a Tier-1 primitive: retheme by repointing these references. */
+@theme {
+  --color-brand:        var(--primitive-blue-700);
+  --color-brand-strong: var(--primitive-blue-900);
+  --color-brand-soft:   var(--primitive-blue-50);
+
+  --color-action:        var(--primitive-copper-500);
+  --color-action-strong: var(--primitive-copper-700);
+  --color-action-soft:   var(--primitive-copper-50);
+
+  --color-eco:      var(--primitive-green-600);
+  --color-eco-soft: var(--primitive-green-50);
+
+  --color-bg:          var(--primitive-paper);
+  --color-surface:     var(--primitive-white);
+  --color-surface-alt: var(--primitive-stone-100);
+  --color-border:      var(--primitive-stone-200);
+  --color-text:        var(--primitive-stone-900);
+  --color-text-muted:  var(--primitive-stone-500);
+  --color-on-brand:    var(--primitive-white);
+
+  --color-background: var(--primitive-paper);
+  --color-foreground: var(--primitive-stone-900);
+
+  --radius-card: 14px;
+  --radius-btn:  10px;
+  --radius-pill: 9999px;
+
+  --shadow-sm:   0 1px 2px rgb(15 46 92 / 0.06);
+  --shadow-card: 0 2px 10px rgb(15 46 92 / 0.07);
+  --shadow-lg:   0 12px 32px rgb(15 46 92 / 0.12);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
 @tailwind base;
@@ -37,14 +92,14 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  
+
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  
+
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
