@@ -7,10 +7,13 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run lint && npm run typecheck",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "db:upsert-shops": "tsx prisma/upsert-shops.ts",
     "db:studio": "prisma studio",
     "setup": "npm run db:generate && npm run db:push && npm run db:seed"
   },
