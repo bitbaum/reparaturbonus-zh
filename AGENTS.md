@@ -1,0 +1,65 @@
+# AGENTS.md
+
+Guide for agents (and humans) working in this repo. Keep changes additive and
+respect the SSOT/DRY/SoC principles in `.claude/CLAUDE.md`.
+
+## What this is
+
+Reparaturbonus Zürich — a Next.js app connecting Zürich residents with certified
+repair shops and issuing government-subsidized bonus codes (repair instead of
+replace). See `README.md` for the product overview.
+
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 15 (App Router, Turbopack, `output: "standalone"`) |
+| Language | TypeScript 5 (strict) |
+| Database | PostgreSQL + Prisma 6 |
+| Auth | NextAuth.js (credentials, JWT, bcryptjs) |
+| Styling | Tailwind CSS 4 |
+| Deploy | Self-hosted (Hetzner, Caddy) — `reparaturbonus.orangecat.ch` |
+
+## Commands
+
+```bash
+npm run dev        # dev server (Turbopack)
+npm run verify     # SSOT gate: lint + typecheck — run before every commit
+npm run build      # prisma generate + next build (hermetic, no live DB needed)
+npm run setup      # db:generate + db:push + db:seed (needs a live DATABASE_URL)
+```
+
+`npm run verify` is the single source of truth for "is this change OK". CI
+(`.github/workflows/ci.yml`) runs `prisma generate` then `npm run verify`, and
+gates `npm run build` on top. Green verify + build locally ⇒ green CI.
+
+## Prisma
+
+- Schema (SSOT for models/types): `prisma/schema.prisma` — 8 models, 3 enums.
+- Migrations: `prisma/migrations/` (`prisma migrate dev` to add; never edit
+  applied migrations).
+- Seed / data helpers: `prisma/seed.ts`, `prisma/upsert-shops.ts`,
+  `prisma/data/`.
+- Client is generated via `prisma generate` (no `postinstall` hook) — run it
+  before typecheck/build so generated types exist.
+
+## Build hermeticity
+
+`next build` does not touch a live database: DB-backed pages (`/admin`,
+`/dashboard`) are `export const dynamic = 'force-dynamic'`, and public pages
+fetch from API routes client-side. A dummy `DATABASE_URL` is enough to build.
+Note: `next.config.ts` sets `eslint.ignoreDuringBuilds` and
+`typescript.ignoreBuildErrors`, so the build does NOT re-check lint/types — that
+is why `verify` runs as its own gate.
+
+## Environment
+
+Copy `.env.example` → `.env.local` and set `DATABASE_URL`, `NEXTAUTH_SECRET`,
+`NEXTAUTH_URL`. Never commit `.env*` files or print secrets.
+
+## Conventions
+
+- Constants are SSOT: `src/lib/constants/` (routes, categories). No hardcoded
+  strings/amounts in components.
+- Bonus logic lives in `src/lib/bonus-codes.ts`.
+- API routes fall back to `src/lib/demo/` mock data when the DB is unavailable.
