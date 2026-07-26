@@ -30,7 +30,7 @@
     "geist": "^1.7.2",
     "lucide-react": "^0.517.0",
     "next": "^15.5.9",
-    "next-auth": "^4.24.11",
+    "next-auth": "^4.24.15",
     "prisma": "^6.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
