@@ -1,9 +1,10 @@
 # Golden CI floor — see dotfiles/templates/ci/README.md.
-# reparaturbonus-zh: npm + Prisma, no test suite yet. Floor = verify
-# (lint + typecheck) — real signal that never ran before. Prisma has no
-# postinstall, so the client is generated before typecheck needs its types.
-# Build is deferred (prisma generate + next build needs DB/env); add it + a test
-# suite as follow-ups.
+# reparaturbonus-zh: npm + Prisma, no test suite yet. Gate = verify
+# (lint + typecheck) + a full production build. Prisma has no postinstall, so
+# the client is generated before typecheck needs its types. The build is
+# hermetic: DB-backed pages (/admin, /dashboard) are `force-dynamic` and public
+# pages fetch client-side, so `next build` needs no live DB — a dummy
+# DATABASE_URL is enough. A test suite remains a follow-up (not warranted yet).
 name: CI
 
 on:
@@ -40,3 +41,12 @@ jobs:
       # SSOT: lint + typecheck, defined once in package.json `verify`.
       - name: Verify
         run: npm run verify
+
+      # Full production build. `npm run build` = prisma generate + next build.
+      # Hermetic: no live DB needed (dummy DATABASE_URL above). NEXTAUTH_* are
+      # dummies just to satisfy config resolution during the build.
+      - name: Build
+        env:
+          NEXTAUTH_SECRET: ci-dummy-secret
+          NEXTAUTH_URL: http://localhost:3000
+        run: npm run build
