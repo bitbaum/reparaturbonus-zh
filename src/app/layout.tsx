@@ -12,9 +12,26 @@ import SessionProviderWrapper from "@/components/providers/session-provider";
 const geistSans = GeistSans;
 const geistMono = GeistMono;
 
+/**
+ * Where this site actually serves. Load-bearing for the social preview: Next
+ * resolves the generated og:image against `metadataBase`, and without it the
+ * tag is emitted as http://localhost:3000/opengraph-image — present, plausible,
+ * and unfetchable by every scraper. Falls back to the real host, not localhost.
+ */
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://reparaturbonus.orangecat.ch";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Reparaturbonus Zürich - Reparieren statt wegwerfen",
   description: "Finden Sie die beste Werkstatt in Zürich und nutzen Sie CHF 100 Reparaturbonus der Stadt. Nachhaltig, günstig und umweltfreundlich.",
+  openGraph: {
+    title: "Reparaturbonus Zürich — Reparieren statt wegwerfen",
+    description: "Die beste Werkstatt in Zürich finden und CHF 100 Reparaturbonus der Stadt nutzen.",
+    url: SITE_URL,
+    siteName: "Reparaturbonus Zürich",
+    type: "website",
+    locale: "de_CH",
+  },
   icons: {
     icon: [
       { url: "/logo/favicon.ico", sizes: "any" },
