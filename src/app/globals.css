@@ -22,6 +22,12 @@
   --primitive-blue-50:  #EEF3FA;
 
   --primitive-copper-700: #9A4E1E;
+  /* 600 exists because 500 cannot carry white text: #C26B2D under white is
+     3.86:1, below the 4.5 AA floor, and it is the fill behind every primary
+     CTA ("Reparatur starten", "Jetzt kostenlos anmelden", "Registrieren").
+     #A85A24 is 5.06:1 and still visibly copper. 500 stays in the ramp for
+     fills and borders, where the floor is 3:1 and it passes. */
+  --primitive-copper-600: #A85A24;
   --primitive-copper-500: #C26B2D;
   --primitive-copper-50:  #FBF1E8;
 
@@ -44,7 +50,7 @@
   --color-brand-strong: var(--primitive-blue-900);
   --color-brand-soft:   var(--primitive-blue-50);
 
-  --color-action:        var(--primitive-copper-500);
+  --color-action:        var(--primitive-copper-600);
   --color-action-strong: var(--primitive-copper-700);
   --color-action-soft:   var(--primitive-copper-50);
 
