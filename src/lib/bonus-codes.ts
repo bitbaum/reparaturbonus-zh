@@ -1,12 +1,38 @@
+const CODE_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const CODE_LENGTH = 8
+
+/**
+ * A bonus code is a bearer token: whoever presents it gets CHF 100. It is
+ * therefore generated from a cryptographic source, not `Math.random()`.
+ *
+ * `Math.random()` is seeded PRNG output with no unpredictability guarantee —
+ * given enough observed codes its internal state is recoverable, and the next
+ * one becomes predictable. For a value redeemable for money that is the
+ * difference between "hard to guess" and "guessable by someone who bothers".
+ *
+ * Web Crypto rather than `node:crypto` deliberately: `globalThis.crypto` exists
+ * in Node 18+, in the edge runtime and in the browser, so this module cannot
+ * break a build by being imported somewhere new. (Today it is only reached from
+ * the API route, but that is a fact about callers, not a property of the file.)
+ *
+ * Rejection sampling, not `% 36`: 256 is not a multiple of 36, so plain modulo
+ * would make the first 4 letters of the alphabet ~14% likelier than the rest.
+ * Bytes at or above the largest usable multiple are discarded and redrawn.
+ */
 export function generateBonusCode(): string {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  const codeLength = 8
+  const limit = Math.floor(256 / CODE_ALPHABET.length) * CODE_ALPHABET.length // 252
   let result = ''
-  
-  for (let i = 0; i < codeLength; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length))
+
+  while (result.length < CODE_LENGTH) {
+    const bytes = new Uint8Array(CODE_LENGTH)
+    globalThis.crypto.getRandomValues(bytes)
+    for (const byte of bytes) {
+      if (byte >= limit) continue // would bias the distribution — redraw
+      result += CODE_ALPHABET.charAt(byte % CODE_ALPHABET.length)
+      if (result.length === CODE_LENGTH) break
+    }
   }
-  
+
   return result
 }
 

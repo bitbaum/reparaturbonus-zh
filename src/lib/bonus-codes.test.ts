@@ -37,6 +37,54 @@ describe('generateBonusCode', () => {
     expect(generateBonusCode()).toMatch(/^[A-Z0-9]{8}$/)
   })
 
+  it('draws from the platform CSPRNG, not Math.random', () => {
+    // The point of the change this test guards: a bonus code is a bearer token
+    // worth CHF 100, so it must not come from a seeded PRNG whose state is
+    // recoverable from prior outputs. Asserting the SOURCE, because the output
+    // of a weak generator looks identical to a strong one.
+    const getRandomValues = vi.spyOn(globalThis.crypto, 'getRandomValues')
+    const mathRandom = vi.spyOn(Math, 'random')
+
+    generateBonusCode()
+
+    expect(getRandomValues).toHaveBeenCalled()
+    expect(mathRandom).not.toHaveBeenCalled()
+
+    getRandomValues.mockRestore()
+    mathRandom.mockRestore()
+  })
+
+  it('redraws instead of folding biased bytes into the alphabet', () => {
+    // 256 is not a multiple of 36, so a plain `% 36` would make the first four
+    // letters ~14% likelier than the rest. Bytes >= 252 must be discarded.
+    // First draw is entirely unusable, second is all zeros -> all 'A'.
+    let call = 0
+    const spy = vi
+      .spyOn(globalThis.crypto, 'getRandomValues')
+      .mockImplementation(((array: Uint8Array) => {
+        array.fill(call === 0 ? 255 : 0)
+        call++
+        return array
+      }) as typeof globalThis.crypto.getRandomValues)
+
+    const code = generateBonusCode()
+
+    expect(code).toBe('AAAAAAAA')
+    expect(spy).toHaveBeenCalledTimes(2) // the biased draw was thrown away
+    spy.mockRestore()
+  })
+
+  it('can emit every character in the alphabet', () => {
+    // A broken index would silently narrow the keyspace — e.g. only ever
+    // reaching the first 26 letters — which weakens the token without
+    // changing its shape.
+    const seen = new Set<string>()
+    for (let i = 0; i < 5000; i++) {
+      for (const ch of generateBonusCode()) seen.add(ch)
+    }
+    expect(seen.size).toBe(36)
+  })
+
   it('does not return a constant', () => {
     // Cheap guard against the generator being stubbed out or the loop being
     // dropped — 100 draws from a 36^8 space colliding into one value would
