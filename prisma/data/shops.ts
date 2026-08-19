@@ -1,4 +1,4 @@
-import { ShopCategory } from '@prisma/client'
+import { ShopCategory } from '../../src/generated/prisma/client'
 
 /**
  * Shop seed data — SSOT for both `seed.ts` (full dev reseed) and
