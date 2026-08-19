@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '../src/generated/prisma/client'
 import { REVAMPIT_SHOP, type SeedShop } from './data/shops'
 
 /**
@@ -11,7 +12,8 @@ import { REVAMPIT_SHOP, type SeedShop } from './data/shops'
  * Shop has no natural unique key, so we match on (name, postalCode).
  */
 
-const prisma = new PrismaClient()
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+const prisma = new PrismaClient({ adapter })
 
 // Only verified, real shops belong here — never demo placeholders.
 const SHOPS: SeedShop[] = [REVAMPIT_SHOP]
