@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
+import { getAllowedUploadExtension, MAX_UPLOAD_SIZE_BYTES } from '@/lib/uploads'
 
 export async function POST(
   request: NextRequest,
@@ -15,6 +16,21 @@ export async function POST(
     if (!residenceProof) {
       return NextResponse.json(
         { error: 'Residence proof is required' },
+        { status: 400 }
+      )
+    }
+
+    const extension = getAllowedUploadExtension(residenceProof.type)
+    if (!extension) {
+      return NextResponse.json(
+        { error: 'Unsupported file type. Please upload a PDF, JPEG, or PNG.' },
+        { status: 400 }
+      )
+    }
+
+    if (residenceProof.size > MAX_UPLOAD_SIZE_BYTES) {
+      return NextResponse.json(
+        { error: 'File is too large. Maximum size is 10 MB.' },
         { status: 400 }
       )
     }
@@ -63,9 +79,11 @@ export async function POST(
     const uploadsDir = join(process.cwd(), 'uploads', 'residence-proofs')
     await mkdir(uploadsDir, { recursive: true })
 
-    // Generate unique filename
-    const timestamp = Date.now()
-    const filename = `${bonusCode.code}_${timestamp}_${residenceProof.name}`
+    // The stored name is built entirely from server-controlled values (the
+    // already-validated bonus code and a timestamp) plus the extension
+    // resolved above — the client-supplied `residenceProof.name` is never
+    // used, so it cannot be used for path traversal / arbitrary file write.
+    const filename = `${bonusCode.code}_${Date.now()}${extension}`
     const filepath = join(uploadsDir, filename)
 
     await writeFile(filepath, buffer)
