@@ -95,7 +95,7 @@ Three enums enforce domain constraints at the database level:
 ### Setup
 
 ```bash
-git clone https://github.com/maonakamoto/reparaturbonus-zh.git
+git clone https://github.com/catomean/reparaturbonus-zh.git
 cd reparaturbonus-zh
 cp .env.example .env.local    # configure DATABASE_URL, NEXTAUTH_SECRET
 npm install
