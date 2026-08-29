@@ -1,4 +1,4 @@
-import { Coins, CloudOff, Recycle } from 'lucide-react'
+import { Coins, CloudOff, Recycle } from 'lucide-react';
 
 const IMPACTS = [
   {
@@ -16,7 +16,7 @@ const IMPACTS = [
     title: 'Abfall vermeiden',
     text: 'Ressourcen schonen dank längerer Nutzung der Gegenstände.',
   },
-] as const
+] as const;
 
 export default function ImpactSection() {
   return (
@@ -29,7 +29,7 @@ export default function ImpactSection() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {IMPACTS.map((impact) => {
-            const Icon = impact.icon
+            const Icon = impact.icon;
             return (
               <div key={impact.title} className="text-center">
                 <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-card bg-surface border border-border text-eco">
@@ -38,10 +38,10 @@ export default function ImpactSection() {
                 <h3 className="text-lg font-semibold text-text mb-2">{impact.title}</h3>
                 <p className="text-text-muted leading-relaxed">{impact.text}</p>
               </div>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
+  );
 }

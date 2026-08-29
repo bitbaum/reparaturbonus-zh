@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { Search } from 'lucide-react'
-import { ROUTES } from '@/lib/constants/routes'
-import { REPAIR_CATEGORIES } from '@/lib/constants/repair-categories'
+import Link from 'next/link';
+import { Search } from 'lucide-react';
+import { ROUTES } from '@/lib/constants/routes';
+import { REPAIR_CATEGORIES } from '@/lib/constants/repair-categories';
 
 interface CategoryStepProps {
-  onSelect: (categoryId: string) => void
-  onBack: () => void
+  onSelect: (categoryId: string) => void;
+  onBack: () => void;
 }
 
 /** Wizard step 1: choose the repair category. */
@@ -27,7 +27,7 @@ export default function CategoryStep({ onSelect, onBack }: CategoryStepProps) {
       <div className="bg-surface rounded-card shadow-card border border-border p-6 sm:p-8 mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {REPAIR_CATEGORIES.map((category) => {
-            const Icon = category.icon
+            const Icon = category.icon;
             return (
               <button
                 key={category.id}
@@ -42,7 +42,7 @@ export default function CategoryStep({ onSelect, onBack }: CategoryStepProps) {
                   {category.examples.slice(0, 2).join(', ')}
                 </div>
               </button>
-            )
+            );
           })}
         </div>
 
@@ -66,5 +66,5 @@ export default function CategoryStep({ onSelect, onBack }: CategoryStepProps) {
         </div>
       </div>
     </section>
-  )
+  );
 }

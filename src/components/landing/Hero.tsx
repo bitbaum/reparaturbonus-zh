@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { ArrowRight, BadgeCheck, Leaf, ShieldCheck } from 'lucide-react'
-import { ROUTES } from '@/lib/constants/routes'
-import { REPAIR_CATEGORIES } from '@/lib/constants/repair-categories'
+import Link from 'next/link';
+import { ArrowRight, BadgeCheck, Leaf, ShieldCheck } from 'lucide-react';
+import { ROUTES } from '@/lib/constants/routes';
+import { REPAIR_CATEGORIES } from '@/lib/constants/repair-categories';
 
 interface HeroProps {
-  onStart: () => void
+  onStart: () => void;
 }
 
 /**
@@ -32,9 +32,9 @@ export default function Hero({ onStart }: HeroProps) {
             </h1>
 
             <p className="text-lg text-text-muted max-w-xl mb-8 leading-relaxed">
-              Kaputtes Gerät, ein Loch in der Kleidung oder abgenutzte Schuhe?
-              Finden Sie eine zertifizierte Werkstatt in der Stadt Zürich und
-              erhalten Sie bis zu 100 Franken an Ihre Reparatur.
+              Kaputtes Gerät, ein Loch in der Kleidung oder abgenutzte Schuhe? Finden Sie eine
+              zertifizierte Werkstatt in der Stadt Zürich und erhalten Sie bis zu 100 Franken an
+              Ihre Reparatur.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-8">
@@ -76,7 +76,7 @@ export default function Hero({ onStart }: HeroProps) {
             </p>
             <ul className="space-y-3">
               {REPAIR_CATEGORIES.map((category) => {
-                const Icon = category.icon
+                const Icon = category.icon;
                 return (
                   <li
                     key={category.id}
@@ -95,16 +95,16 @@ export default function Hero({ onStart }: HeroProps) {
                       CHF 100
                     </span>
                   </li>
-                )
+                );
               })}
             </ul>
             <p className="text-xs text-text-muted mt-5 leading-relaxed">
-              Der Bonus deckt bis zu 50% der Reparaturkosten, maximal CHF 100.
-              Reparatur in der Schweiz, Abgabestelle in der Stadt Zürich.
+              Der Bonus deckt bis zu 50% der Reparaturkosten, maximal CHF 100. Reparatur in der
+              Schweiz, Abgabestelle in der Stadt Zürich.
             </p>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

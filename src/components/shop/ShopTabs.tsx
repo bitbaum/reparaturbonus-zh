@@ -1,14 +1,20 @@
-import { useState } from 'react'
-import { Shop } from '@/types/shop'
-import { ClockIcon, StarIcon, CheckCircleIcon, PhoneIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react';
+import { Shop } from '@/types/shop';
+import {
+  ClockIcon,
+  StarIcon,
+  CheckCircleIcon,
+  PhoneIcon,
+  ChatBubbleLeftRightIcon,
+} from '@heroicons/react/24/outline';
 
 interface ShopTabsProps {
-  shop: Shop
-  averageRating: number
+  shop: Shop;
+  averageRating: number;
 }
 
 export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
-  const [activeTab, setActiveTab] = useState<'leistungen' | 'reviews' | 'about'>('leistungen')
+  const [activeTab, setActiveTab] = useState<'leistungen' | 'reviews' | 'about'>('leistungen');
 
   return (
     <>
@@ -39,7 +45,7 @@ export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
             onClick={() => setActiveTab('about')}
             className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
               activeTab === 'about'
-                ? 'border-indigo-500 text-indigo-600'  
+                ? 'border-indigo-500 text-indigo-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -58,12 +64,19 @@ export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
               {shop.services ? (
                 <div className="space-y-4">
                   {shop.services.map((service, index) => (
-                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-4 lg:p-6">
+                    <div
+                      key={index}
+                      className="bg-white rounded-lg border border-gray-200 p-4 lg:p-6"
+                    >
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
                         <h3 className="text-lg font-semibold text-gray-900">{service.name}</h3>
-                        <span className="text-lg font-bold text-indigo-600 sm:text-right">{service.price}</span>
+                        <span className="text-lg font-bold text-indigo-600 sm:text-right">
+                          {service.price}
+                        </span>
                       </div>
-                      <p className="text-gray-600 mb-3 text-sm lg:text-base">{service.description}</p>
+                      <p className="text-gray-600 mb-3 text-sm lg:text-base">
+                        {service.description}
+                      </p>
                       {service.duration && (
                         <div className="flex items-center text-sm text-gray-500">
                           <ClockIcon className="h-4 w-4 mr-1" />
@@ -90,14 +103,19 @@ export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
                     <StarIcon className="h-5 w-5 text-yellow-400 mr-1" />
                     <span className="text-lg font-semibold">{averageRating.toFixed(1)}</span>
                   </div>
-                  <div className="text-sm text-gray-500">{shop.reviews?.length || 0} Bewertungen</div>
+                  <div className="text-sm text-gray-500">
+                    {shop.reviews?.length || 0} Bewertungen
+                  </div>
                 </div>
               </div>
-              
+
               {shop.reviews && shop.reviews.length > 0 ? (
                 <div className="space-y-4">
                   {shop.reviews.map((review, index) => (
-                    <div key={index} className="bg-white rounded-lg border border-gray-200 p-4 lg:p-6">
+                    <div
+                      key={index}
+                      className="bg-white rounded-lg border border-gray-200 p-4 lg:p-6"
+                    >
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
                         <div className="flex items-center mb-2 sm:mb-0">
                           <div className="flex items-center">
@@ -105,7 +123,9 @@ export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
                               <StarIcon
                                 key={i}
                                 className={`h-4 w-4 ${
-                                  i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                                  i < review.rating
+                                    ? 'text-yellow-400 fill-current'
+                                    : 'text-gray-300'
                                 }`}
                               />
                             ))}
@@ -129,7 +149,7 @@ export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
           {activeTab === 'about' && (
             <div className="space-y-6">
               <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Über {shop.name}</h2>
-              
+
               {shop.aboutText ? (
                 <div className="bg-white rounded-lg border border-gray-200 p-4 lg:p-6">
                   <p className="text-gray-700 text-sm lg:text-base leading-relaxed whitespace-pre-line">
@@ -148,7 +168,10 @@ export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
                   <h3 className="font-semibold text-gray-900 mb-4">Spezialisierungen</h3>
                   <div className="flex flex-wrap gap-2">
                     {shop.specializations.map((spec, index) => (
-                      <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800"
+                      >
                         {spec}
                       </span>
                     ))}
@@ -159,7 +182,9 @@ export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
               {/* Certifications */}
               {shop.certifications && shop.certifications.length > 0 && (
                 <div className="bg-white rounded-lg border border-gray-200 p-4 lg:p-6">
-                  <h3 className="font-semibold text-gray-900 mb-4">Zertifikate & Qualifikationen</h3>
+                  <h3 className="font-semibold text-gray-900 mb-4">
+                    Zertifikate & Qualifikationen
+                  </h3>
                   <div className="space-y-2">
                     {shop.certifications.map((cert, index) => (
                       <div key={index} className="flex items-center">
@@ -216,14 +241,18 @@ export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
               <div className="flex items-start">
                 <CheckCircleIcon className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="font-medium text-gray-900 text-sm lg:text-base">CHF 100 Bonus garantiert</div>
+                  <div className="font-medium text-gray-900 text-sm lg:text-base">
+                    CHF 100 Bonus garantiert
+                  </div>
                   <div className="text-sm text-gray-600">Nach jeder Reparatur</div>
                 </div>
               </div>
               <div className="flex items-start">
                 <CheckCircleIcon className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="font-medium text-gray-900 text-sm lg:text-base">Zertifizierte Werkstatt</div>
+                  <div className="font-medium text-gray-900 text-sm lg:text-base">
+                    Zertifizierte Werkstatt
+                  </div>
                   <div className="text-sm text-gray-600">Geprüfte Qualität</div>
                 </div>
               </div>
@@ -239,5 +268,5 @@ export function ShopTabs({ shop, averageRating }: ShopTabsProps) {
         </div>
       </div>
     </>
-  )
-} 
+  );
+}

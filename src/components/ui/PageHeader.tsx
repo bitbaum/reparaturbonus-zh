@@ -1,7 +1,7 @@
 interface PageHeaderProps {
-  title: string
-  subtitle?: string
-  children?: React.ReactNode
+  title: string;
+  subtitle?: string;
+  children?: React.ReactNode;
 }
 
 export default function PageHeader({ title, subtitle, children }: PageHeaderProps) {
@@ -11,17 +11,11 @@ export default function PageHeader({ title, subtitle, children }: PageHeaderProp
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-            {subtitle && (
-              <p className="mt-2 text-gray-600">{subtitle}</p>
-            )}
+            {subtitle && <p className="mt-2 text-gray-600">{subtitle}</p>}
           </div>
-          {children && (
-            <div className="flex space-x-4">
-              {children}
-            </div>
-          )}
+          {children && <div className="flex space-x-4">{children}</div>}
         </div>
       </div>
     </div>
-  )
+  );
 }

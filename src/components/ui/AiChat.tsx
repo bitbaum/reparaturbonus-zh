@@ -1,40 +1,45 @@
-'use client'
+'use client';
 
-import { useState, useRef, useEffect } from 'react'
-import { ChatBubbleLeftRightIcon, XMarkIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline'
-import { QuestionMarkCircleIcon, WrenchScrewdriverIcon, TagIcon, HomeIcon } from '@heroicons/react/24/solid'
-import { CATEGORY_LABELS, SHOP_CATEGORIES } from '@/lib/constants/categories'
+import { useState, useRef, useEffect } from 'react';
+import { ChatBubbleLeftRightIcon, XMarkIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import {
+  QuestionMarkCircleIcon,
+  WrenchScrewdriverIcon,
+  TagIcon,
+  HomeIcon,
+} from '@heroicons/react/24/solid';
+import { CATEGORY_LABELS, SHOP_CATEGORIES } from '@/lib/constants/categories';
 
 interface Message {
-  id: string
-  text: string
-  sender: 'user' | 'assistant'
-  timestamp: Date
-  categoryButtons?: boolean
+  id: string;
+  text: string;
+  sender: 'user' | 'assistant';
+  timestamp: Date;
+  categoryButtons?: boolean;
 }
 
 export default function RepairChat() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       text: 'Hallo! Was möchten Sie reparieren lassen? Wählen Sie eine Kategorie aus:',
       sender: 'assistant',
       timestamp: new Date(),
-      categoryButtons: true
-    }
-  ])
-  const [inputText, setInputText] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+      categoryButtons: true,
+    },
+  ]);
+  const [inputText, setInputText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    scrollToBottom();
+  }, [messages]);
 
   const handleCategorySelect = (category: string, categoryLabel: string) => {
     // Add user message showing selected category
@@ -42,11 +47,11 @@ export default function RepairChat() {
       id: Date.now().toString(),
       text: `Ich möchte etwas aus der Kategorie "${categoryLabel}" reparieren lassen.`,
       sender: 'user',
-      timestamp: new Date()
-    }
+      timestamp: new Date(),
+    };
 
-    setMessages(prev => [...prev, userMessage])
-    setIsTyping(true)
+    setMessages((prev) => [...prev, userMessage]);
+    setIsTyping(true);
 
     // Handle categories differently
     setTimeout(() => {
@@ -55,117 +60,153 @@ export default function RepairChat() {
           id: (Date.now() + 1).toString(),
           text: 'Das ist toll, dass Sie etwas reparieren möchten! 🔧 Auch wenn die Stadt Zürich für diese Kategorie aktuell keinen Reparaturbonus anbietet, gibt es bestimmt Werkstätten in Ihrer Nähe, die Ihnen helfen können. Reparieren ist immer besser als wegwerfen - Sie schonen damit die Umwelt und sparen Geld! Beschreiben Sie mir gerne, was kaputt ist, und ich kann Ihnen Tipps geben.',
           sender: 'assistant',
-          timestamp: new Date()
-        }
-        setMessages(prev => [...prev, assistantMessage])
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
       } else {
         // For bonus-eligible categories, redirect to shops page
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           text: `Perfekt! Für ${categoryLabel} gibt es den Reparaturbonus von CHF 100. Ich leite Sie jetzt zu unseren qualifizierten Werkstätten weiter, wo Sie direkt Kontakt aufnehmen können.`,
           sender: 'assistant',
-          timestamp: new Date()
-        }
-        setMessages(prev => [...prev, assistantMessage])
-        
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+
         // Redirect to shops page with category filter after a short delay
         setTimeout(() => {
-          window.location.href = `/shops?category=${category.toUpperCase()}`
-        }, 1500)
+          window.location.href = `/shops?category=${category.toUpperCase()}`;
+        }, 1500);
       }
-      setIsTyping(false)
-    }, 800)
-  }
+      setIsTyping(false);
+    }, 800);
+  };
 
   const handleSendMessage = () => {
-    if (!inputText.trim()) return
+    if (!inputText.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputText,
       sender: 'user',
-      timestamp: new Date()
-    }
+      timestamp: new Date(),
+    };
 
-    setMessages(prev => [...prev, userMessage])
-    const currentInput = inputText
-    setInputText('')
-    setIsTyping(true)
+    setMessages((prev) => [...prev, userMessage]);
+    const currentInput = inputText;
+    setInputText('');
+    setIsTyping(true);
 
     // Simple response generation
     setTimeout(() => {
-      const lowerMessage = currentInput.toLowerCase()
-      let responseText = ''
+      const lowerMessage = currentInput.toLowerCase();
+      let responseText = '';
 
       // Electronics repair
-      if (lowerMessage.includes('handy') || lowerMessage.includes('smartphone') || lowerMessage.includes('display') || lowerMessage.includes('bildschirm') || lowerMessage.includes('laptop') || lowerMessage.includes('computer')) {
-        responseText = 'Das klingt nach einem Elektronik-Problem! Für Elektronik-Reparaturen gibt es den CHF 100 Reparaturbonus. Ich empfehle Ihnen, direkt unsere spezialisierten Elektronik-Werkstätten zu kontaktieren.'
+      if (
+        lowerMessage.includes('handy') ||
+        lowerMessage.includes('smartphone') ||
+        lowerMessage.includes('display') ||
+        lowerMessage.includes('bildschirm') ||
+        lowerMessage.includes('laptop') ||
+        lowerMessage.includes('computer')
+      ) {
+        responseText =
+          'Das klingt nach einem Elektronik-Problem! Für Elektronik-Reparaturen gibt es den CHF 100 Reparaturbonus. Ich empfehle Ihnen, direkt unsere spezialisierten Elektronik-Werkstätten zu kontaktieren.';
       }
       // Clothing repair
-      else if (lowerMessage.includes('kleidung') || lowerMessage.includes('jacke') || lowerMessage.includes('hose') || lowerMessage.includes('reissverschluss') || lowerMessage.includes('nähen')) {
-        responseText = 'Das ist ein Kleidungsreparatur! Auch dafür gibt es den CHF 100 Reparaturbonus. Unsere Schneidereibetriebe können Ihnen sicher weiterhelfen.'
+      else if (
+        lowerMessage.includes('kleidung') ||
+        lowerMessage.includes('jacke') ||
+        lowerMessage.includes('hose') ||
+        lowerMessage.includes('reissverschluss') ||
+        lowerMessage.includes('nähen')
+      ) {
+        responseText =
+          'Das ist ein Kleidungsreparatur! Auch dafür gibt es den CHF 100 Reparaturbonus. Unsere Schneidereibetriebe können Ihnen sicher weiterhelfen.';
       }
       // Shoe repair
-      else if (lowerMessage.includes('schuhe') || lowerMessage.includes('absatz') || lowerMessage.includes('sohle')) {
-        responseText = 'Schuhreparaturen sind sehr nachhaltig! Dafür gibt es ebenfalls den CHF 100 Reparaturbonus. Ich kann Ihnen gerne unsere Schuhmacher zeigen.'
+      else if (
+        lowerMessage.includes('schuhe') ||
+        lowerMessage.includes('absatz') ||
+        lowerMessage.includes('sohle')
+      ) {
+        responseText =
+          'Schuhreparaturen sind sehr nachhaltig! Dafür gibt es ebenfalls den CHF 100 Reparaturbonus. Ich kann Ihnen gerne unsere Schuhmacher zeigen.';
       }
       // General repair advice
-      else if (lowerMessage.includes('reparatur') || lowerMessage.includes('kaputt') || lowerMessage.includes('defekt')) {
-        responseText = 'Reparieren ist immer eine gute Idee! 🛠️ Es spart Geld, schont die Umwelt und oft ist der Schaden nicht so schlimm wie gedacht. Können Sie mir mehr Details nennen? Was genau ist kaputt?'
+      else if (
+        lowerMessage.includes('reparatur') ||
+        lowerMessage.includes('kaputt') ||
+        lowerMessage.includes('defekt')
+      ) {
+        responseText =
+          'Reparieren ist immer eine gute Idee! 🛠️ Es spart Geld, schont die Umwelt und oft ist der Schaden nicht so schlimm wie gedacht. Können Sie mir mehr Details nennen? Was genau ist kaputt?';
       }
       // Cost questions
-      else if (lowerMessage.includes('kosten') || lowerMessage.includes('preis') || lowerMessage.includes('günstig')) {
-        responseText = 'Reparaturen kosten meist nur einen Bruchteil eines Neukaufs! Plus für Elektro, Kleidung und Schuhe gibt es CHF 100 Bonus von der Stadt Zürich. Die meisten Werkstätten bieten kostenlose Kostenvoranschläge an.'
+      else if (
+        lowerMessage.includes('kosten') ||
+        lowerMessage.includes('preis') ||
+        lowerMessage.includes('günstig')
+      ) {
+        responseText =
+          'Reparaturen kosten meist nur einen Bruchteil eines Neukaufs! Plus für Elektro, Kleidung und Schuhe gibt es CHF 100 Bonus von der Stadt Zürich. Die meisten Werkstätten bieten kostenlose Kostenvoranschläge an.';
       }
       // Environmental questions
-      else if (lowerMessage.includes('umwelt') || lowerMessage.includes('nachhaltig') || lowerMessage.includes('co2')) {
-        responseText = 'Reparieren ist super für die Umwelt! 🌱 Sie sparen damit durchschnittlich 70% der CO2-Emissionen einer Neuproduktion und vermeiden Abfall. Jede Reparatur ist ein Beitrag zum Umweltschutz!'
+      else if (
+        lowerMessage.includes('umwelt') ||
+        lowerMessage.includes('nachhaltig') ||
+        lowerMessage.includes('co2')
+      ) {
+        responseText =
+          'Reparieren ist super für die Umwelt! 🌱 Sie sparen damit durchschnittlich 70% der CO2-Emissionen einer Neuproduktion und vermeiden Abfall. Jede Reparatur ist ein Beitrag zum Umweltschutz!';
       }
       // Default response
       else {
-        responseText = 'Interessant! Können Sie mir mehr Details erzählen? Je besser ich Ihr Problem verstehe, desto gezielter kann ich Ihnen helfen. Was genau ist kaputt oder funktioniert nicht richtig?'
+        responseText =
+          'Interessant! Können Sie mir mehr Details erzählen? Je besser ich Ihr Problem verstehe, desto gezielter kann ich Ihnen helfen. Was genau ist kaputt oder funktioniert nicht richtig?';
       }
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: responseText,
         sender: 'assistant',
-        timestamp: new Date()
-      }
+        timestamp: new Date(),
+      };
 
-      setMessages(prev => [...prev, assistantMessage])
-      setIsTyping(false)
-    }, 800)
-  }
+      setMessages((prev) => [...prev, assistantMessage]);
+      setIsTyping(false);
+    }, 800);
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
+      e.preventDefault();
+      handleSendMessage();
     }
-  }
+  };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('de-DE', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    })
-  }
+    return date.toLocaleTimeString('de-DE', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case SHOP_CATEGORIES.ELECTRONICS:
-        return <WrenchScrewdriverIcon className="h-5 w-5" />
+        return <WrenchScrewdriverIcon className="h-5 w-5" />;
       case SHOP_CATEGORIES.CLOTHING:
-        return <TagIcon className="h-5 w-5" />
+        return <TagIcon className="h-5 w-5" />;
       case SHOP_CATEGORIES.SHOES:
-        return <HomeIcon className="h-5 w-5" />
+        return <HomeIcon className="h-5 w-5" />;
       case 'OTHER':
-        return <QuestionMarkCircleIcon className="h-5 w-5" />
+        return <QuestionMarkCircleIcon className="h-5 w-5" />;
       default:
-        return <WrenchScrewdriverIcon className="h-5 w-5" />
+        return <WrenchScrewdriverIcon className="h-5 w-5" />;
     }
-  }
+  };
 
   return (
     <>
@@ -207,45 +248,73 @@ export default function RepairChat() {
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((message) => (
-              <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-xs rounded-2xl px-4 py-2 ${
-                  message.sender === 'user' 
-                    ? 'bg-indigo-600 text-white' 
-                    : 'bg-gray-100 text-gray-900'
-                }`}>
+              <div
+                key={message.id}
+                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-xs rounded-2xl px-4 py-2 ${
+                    message.sender === 'user'
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-gray-100 text-gray-900'
+                  }`}
+                >
                   <p className="text-sm">{message.text}</p>
-                  
+
                   {/* Category Selection Buttons */}
                   {message.categoryButtons && (
                     <div className="mt-3 space-y-2">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <button
-                          onClick={() => handleCategorySelect(SHOP_CATEGORIES.ELECTRONICS, CATEGORY_LABELS[SHOP_CATEGORIES.ELECTRONICS])}
+                          onClick={() =>
+                            handleCategorySelect(
+                              SHOP_CATEGORIES.ELECTRONICS,
+                              CATEGORY_LABELS[SHOP_CATEGORIES.ELECTRONICS],
+                            )
+                          }
                           className="flex items-center space-x-2 p-2 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors text-left w-full"
                         >
                           {getCategoryIcon(SHOP_CATEGORIES.ELECTRONICS)}
-                          <span className="text-xs font-medium text-gray-900 truncate">{CATEGORY_LABELS[SHOP_CATEGORIES.ELECTRONICS]}</span>
+                          <span className="text-xs font-medium text-gray-900 truncate">
+                            {CATEGORY_LABELS[SHOP_CATEGORIES.ELECTRONICS]}
+                          </span>
                         </button>
                         <button
-                          onClick={() => handleCategorySelect(SHOP_CATEGORIES.CLOTHING, CATEGORY_LABELS[SHOP_CATEGORIES.CLOTHING])}
+                          onClick={() =>
+                            handleCategorySelect(
+                              SHOP_CATEGORIES.CLOTHING,
+                              CATEGORY_LABELS[SHOP_CATEGORIES.CLOTHING],
+                            )
+                          }
                           className="flex items-center space-x-2 p-2 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors text-left w-full"
                         >
                           {getCategoryIcon(SHOP_CATEGORIES.CLOTHING)}
-                          <span className="text-xs font-medium text-gray-900 truncate">{CATEGORY_LABELS[SHOP_CATEGORIES.CLOTHING]}</span>
+                          <span className="text-xs font-medium text-gray-900 truncate">
+                            {CATEGORY_LABELS[SHOP_CATEGORIES.CLOTHING]}
+                          </span>
                         </button>
                         <button
-                          onClick={() => handleCategorySelect(SHOP_CATEGORIES.SHOES, CATEGORY_LABELS[SHOP_CATEGORIES.SHOES])}
+                          onClick={() =>
+                            handleCategorySelect(
+                              SHOP_CATEGORIES.SHOES,
+                              CATEGORY_LABELS[SHOP_CATEGORIES.SHOES],
+                            )
+                          }
                           className="flex items-center space-x-2 p-2 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors text-left w-full"
                         >
                           {getCategoryIcon(SHOP_CATEGORIES.SHOES)}
-                          <span className="text-xs font-medium text-gray-900 truncate">{CATEGORY_LABELS[SHOP_CATEGORIES.SHOES]}</span>
+                          <span className="text-xs font-medium text-gray-900 truncate">
+                            {CATEGORY_LABELS[SHOP_CATEGORIES.SHOES]}
+                          </span>
                         </button>
                         <button
                           onClick={() => handleCategorySelect('OTHER', 'Etwas anderes')}
                           className="flex items-center space-x-2 p-2 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-left w-full"
                         >
                           {getCategoryIcon('OTHER')}
-                          <span className="text-xs font-medium text-gray-600 truncate">Etwas anderes</span>
+                          <span className="text-xs font-medium text-gray-600 truncate">
+                            Etwas anderes
+                          </span>
                         </button>
                       </div>
                       <p className="text-xs text-gray-600 mt-2">
@@ -253,20 +322,26 @@ export default function RepairChat() {
                       </p>
                     </div>
                   )}
-                  
+
                   <p className="text-xs opacity-70 mt-1">{formatTime(message.timestamp)}</p>
                 </div>
               </div>
             ))}
-            
+
             {/* Typing Indicator */}
             {isTyping && (
               <div className="flex justify-start">
                 <div className="bg-gray-100 text-gray-900 rounded-2xl px-4 py-2 max-w-xs">
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: '0.1s' }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: '0.2s' }}
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -301,5 +376,5 @@ export default function RepairChat() {
         </div>
       )}
     </>
-  )
-} 
+  );
+}

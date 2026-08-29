@@ -1,25 +1,19 @@
-import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { prisma } from '@/lib/db'
-import { authOptions } from '@/lib/auth'
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { prisma } from '@/lib/db';
+import { authOptions } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
-    
+    const session = await getServerSession(authOptions);
+
     if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userRole = (session.user as { role?: string })?.role
+    const userRole = (session.user as { role?: string })?.role;
     if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
-      return NextResponse.json(
-        { error: 'Forbidden' },
-        { status: 403 }
-      )
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const [
@@ -28,7 +22,7 @@ export async function GET() {
       totalBonusCodes,
       activeBonusCodes,
       totalBonusValue,
-      usedBonusValue
+      usedBonusValue,
     ] = await Promise.all([
       prisma.user.count(),
       prisma.shop.count(),
@@ -37,24 +31,24 @@ export async function GET() {
         where: {
           isUsed: false,
           expiresAt: {
-            gt: new Date()
-          }
-        }
+            gt: new Date(),
+          },
+        },
       }),
       prisma.bonusCode.aggregate({
         _sum: {
-          amount: true
-        }
+          amount: true,
+        },
       }),
       prisma.bonusCode.aggregate({
         _sum: {
-          amount: true
+          amount: true,
         },
         where: {
-          isUsed: true
-        }
-      })
-    ])
+          isUsed: true,
+        },
+      }),
+    ]);
 
     const stats = {
       totalUsers,
@@ -62,15 +56,12 @@ export async function GET() {
       totalBonusCodes,
       activeBonusCodes,
       totalBonusValue: totalBonusValue._sum.amount || 0,
-      usedBonusValue: usedBonusValue._sum.amount || 0
-    }
+      usedBonusValue: usedBonusValue._sum.amount || 0,
+    };
 
-    return NextResponse.json(stats)
+    return NextResponse.json(stats);
   } catch (error) {
-    console.error('Error fetching admin stats:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch admin stats' },
-      { status: 500 }
-    )
+    console.error('Error fetching admin stats:', error);
+    return NextResponse.json({ error: 'Failed to fetch admin stats' }, { status: 500 });
   }
 }

@@ -1,31 +1,31 @@
-'use client'
+'use client';
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface AdminAuthGuardProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default function AdminAuthGuard({ children }: AdminAuthGuardProps) {
-  const { data: session, status } = useSession()
-  const router = useRouter()
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
-    if (status === 'loading') return
+    if (status === 'loading') return;
 
     if (!session) {
-      router.push('/auth/signin')
-      return
+      router.push('/auth/signin');
+      return;
     }
 
-    const userRole = (session.user as { role?: string })?.role
+    const userRole = (session.user as { role?: string })?.role;
     if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
-      router.push('/dashboard')
-      return
+      router.push('/dashboard');
+      return;
     }
-  }, [session, status, router])
+  }, [session, status, router]);
 
   if (status === 'loading') {
     return (
@@ -35,17 +35,17 @@ export default function AdminAuthGuard({ children }: AdminAuthGuardProps) {
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!session) {
-    return null
+    return null;
   }
 
-  const userRole = (session.user as { role?: string })?.role
+  const userRole = (session.user as { role?: string })?.role;
   if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
-    return null
+    return null;
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }

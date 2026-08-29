@@ -1,14 +1,10 @@
-'use client'
+'use client';
 
-import { SessionProvider } from 'next-auth/react'
+import { SessionProvider } from 'next-auth/react';
 
-export default function SessionProviderWrapper({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function SessionProviderWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider 
+    <SessionProvider
       // Add basePath and refetchInterval to help with build issues
       basePath="/api/auth"
       refetchInterval={0}
@@ -16,5 +12,5 @@ export default function SessionProviderWrapper({
     >
       {children}
     </SessionProvider>
-  )
+  );
 }

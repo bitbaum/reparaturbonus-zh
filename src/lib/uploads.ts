@@ -10,10 +10,10 @@ const ALLOWED_UPLOAD_EXTENSIONS: Record<string, string> = {
   'application/pdf': '.pdf',
   'image/jpeg': '.jpg',
   'image/png': '.png',
-}
+};
 
-export const MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
+export const MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 
 export function getAllowedUploadExtension(mimeType: string): string | null {
-  return ALLOWED_UPLOAD_EXTENSIONS[mimeType] ?? null
+  return ALLOWED_UPLOAD_EXTENSIONS[mimeType] ?? null;
 }

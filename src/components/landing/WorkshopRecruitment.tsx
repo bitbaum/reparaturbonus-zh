@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
+import { useState } from 'react';
+import Link from 'next/link';
 import {
   ArrowRight,
   Wrench,
@@ -10,15 +10,15 @@ import {
   Target,
   Coins,
   MonitorSmartphone,
-} from 'lucide-react'
-import { ROUTES } from '@/lib/constants/routes'
+} from 'lucide-react';
+import { ROUTES } from '@/lib/constants/routes';
 
 const ONBOARDING_STEPS = [
   { title: 'Grunddaten eingeben', text: 'Alle Pflicht-Formularfelder ausfüllen' },
   { title: 'Leistungen auswählen', text: 'Spezialisierungen und Dienstleistungen angeben' },
   { title: 'Prüfung & Freischaltung', text: 'Qualitätsprüfung dauert 2–3 Werktage' },
   { title: 'Kund*innen erhalten', text: 'Sofort sichtbar für Reparatur-Suchende' },
-] as const
+] as const;
 
 const BENEFITS = [
   {
@@ -36,16 +36,19 @@ const BENEFITS = [
     title: 'Moderne Plattform',
     text: 'Benutzerfreundliche Online-Präsenz für bessere Auffindbarkeit',
   },
-] as const
+] as const;
 
 const REQUIREMENTS = [
   { title: 'In der Stadt', text: 'Abgabestelle in der Stadt Zürich' },
-  { title: 'Reparatur in der Schweiz', text: 'Reparaturen müssen in der Schweiz durchgeführt werden' },
+  {
+    title: 'Reparatur in der Schweiz',
+    text: 'Reparaturen müssen in der Schweiz durchgeführt werden',
+  },
   { title: 'Qualitätsstandards', text: 'Nachvollziehbare Preise und verlässliche Servicequalität' },
-] as const
+] as const;
 
 export default function WorkshopRecruitment() {
-  const [showInfo, setShowInfo] = useState(false)
+  const [showInfo, setShowInfo] = useState(false);
 
   return (
     <>
@@ -104,10 +107,12 @@ export default function WorkshopRecruitment() {
             <div className="bg-on-brand/5 rounded-card p-8 border border-on-brand/10 text-on-brand">
               <div className="grid md:grid-cols-2 gap-12">
                 <div>
-                  <h3 className="text-2xl font-semibold mb-6">Was bietet das Reparatur-Netzwerk?</h3>
+                  <h3 className="text-2xl font-semibold mb-6">
+                    Was bietet das Reparatur-Netzwerk?
+                  </h3>
                   <div className="space-y-6">
                     {BENEFITS.map((benefit) => {
-                      const Icon = benefit.icon
+                      const Icon = benefit.icon;
                       return (
                         <div key={benefit.title} className="flex items-start">
                           <span className="flex h-12 w-12 items-center justify-center rounded-btn bg-action/20 text-action mr-4 shrink-0">
@@ -118,7 +123,7 @@ export default function WorkshopRecruitment() {
                             <p className="text-on-brand/70">{benefit.text}</p>
                           </div>
                         </div>
-                      )
+                      );
                     })}
                   </div>
                 </div>
@@ -157,5 +162,5 @@ export default function WorkshopRecruitment() {
         </section>
       )}
     </>
-  )
+  );
 }

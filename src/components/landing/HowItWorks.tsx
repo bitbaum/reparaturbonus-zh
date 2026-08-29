@@ -1,6 +1,6 @@
-import Link from 'next/link'
-import { ArrowRight, FileText, PencilLine, Store } from 'lucide-react'
-import { ROUTES } from '@/lib/constants/routes'
+import Link from 'next/link';
+import { ArrowRight, FileText, PencilLine, Store } from 'lucide-react';
+import { ROUTES } from '@/lib/constants/routes';
 
 const STEPS = [
   {
@@ -18,7 +18,7 @@ const STEPS = [
     title: 'Werkstatt auswählen',
     text: 'Lassen Sie sich passende Werkstätten in Ihrer Nähe anzeigen und bringen Sie Ihren Gegenstand vorbei.',
   },
-] as const
+] as const;
 
 export default function HowItWorks() {
   return (
@@ -30,7 +30,7 @@ export default function HowItWorks() {
 
       <div className="grid md:grid-cols-3 gap-8">
         {STEPS.map((step, index) => {
-          const Icon = step.icon
+          const Icon = step.icon;
           return (
             <div
               key={step.title}
@@ -45,7 +45,7 @@ export default function HowItWorks() {
               <h3 className="text-lg font-semibold text-text mb-2">{step.title}</h3>
               <p className="text-text-muted leading-relaxed">{step.text}</p>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -59,5 +59,5 @@ export default function HowItWorks() {
         </Link>
       </div>
     </section>
-  )
+  );
 }
