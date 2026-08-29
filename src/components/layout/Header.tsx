@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { ROUTES } from '@/lib/constants/routes';
 import { CATEGORY_LABELS, SHOP_CATEGORIES } from '@/lib/constants/categories';
@@ -9,6 +10,21 @@ import { CATEGORY_ICONS } from '@/lib/constants/category-icons';
 import Image from 'next/image';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Store } from 'lucide-react';
+
+const WERKSTATTEN_MENU_ID = 'werkstatten-menu';
+
+/**
+ * `aria-current="page"` for the link matching the current route.
+ *
+ * Nothing here marked the active destination, so a screen-reader user had no
+ * way to know where in the site they were. This announces it without changing
+ * anything on screen — the visual active state is a separate design decision.
+ */
+function currentPage(pathname: string | null, href: string): 'page' | undefined {
+  if (!pathname) return undefined;
+  if (href === '/') return pathname === '/' ? 'page' : undefined;
+  return pathname === href || pathname.startsWith(`${href}/`) ? 'page' : undefined;
+}
 
 export default function Header() {
   // Temporarily disable session for build - add error handling
@@ -24,6 +40,7 @@ export default function Header() {
     console.log('Session provider not available');
   }
 
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [werkstattenDropdownOpen, setWerkstattenDropdownOpen] = useState(false);
@@ -90,8 +107,9 @@ export default function Header() {
           {/* Mobile menu button */}
           <button
             onClick={toggleMobileMenu}
-            className="md:hidden flex items-center justify-center w-8 h-8 text-gray-700 hover:text-brand focus:outline-none"
-            aria-label="Toggle mobile menu"
+            className="md:hidden flex items-center justify-center w-11 h-11 -mr-2 text-gray-700 hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            aria-label="Menü öffnen"
+            aria-expanded={mobileMenuOpen}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileMenuOpen ? (
@@ -115,25 +133,47 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
             {/* Werkstätten Dropdown - Fixed hover behavior */}
+            {/* The menu used to open on hover ONLY, which meant it did not exist
+                for anyone navigating by keyboard: you could Tab to the trigger,
+                but nothing ever revealed the categories behind it. focus/blur
+                mirror the mouse handlers so the same content is reachable both
+                ways, and Escape closes it the way a disclosure is expected to. */}
             <div
               className="relative group"
               onMouseEnter={() => setWerkstattenDropdownOpen(true)}
               onMouseLeave={() => setWerkstattenDropdownOpen(false)}
+              onFocus={() => setWerkstattenDropdownOpen(true)}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                  setWerkstattenDropdownOpen(false);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setWerkstattenDropdownOpen(false);
+                }
+              }}
             >
               <Link
                 href={ROUTES.SHOPS}
+                aria-current={currentPage(pathname, ROUTES.SHOPS)}
+                aria-haspopup="true"
+                aria-expanded={werkstattenDropdownOpen}
+                aria-controls={WERKSTATTEN_MENU_ID}
                 className={`flex items-center space-x-1 text-gray-700 hover:text-brand font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap py-2 ${
                   scrolled ? 'text-sm' : 'text-sm lg:text-base'
                 }`}
               >
                 <span>Werkstätten</span>
                 <ChevronDownIcon
+                  aria-hidden="true"
                   className={`h-4 w-4 transition-transform duration-200 ${werkstattenDropdownOpen ? 'rotate-180' : ''}`}
                 />
               </Link>
 
               {/* Dropdown Menu - No gap, proper megamenu */}
               <div
+                id={WERKSTATTEN_MENU_ID}
                 className={`absolute top-full left-0 w-72 bg-white rounded-lg shadow-xl border border-gray-200 py-3 transition-all duration-200 ${
                   werkstattenDropdownOpen
                     ? 'opacity-100 visible translate-y-0'
@@ -185,6 +225,7 @@ export default function Header() {
 
             <Link
               href={ROUTES.HOW_IT_WORKS}
+              aria-current={currentPage(pathname, ROUTES.HOW_IT_WORKS)}
               className={`text-gray-700 hover:text-brand font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
                 scrolled ? 'text-sm' : 'text-sm lg:text-base'
               }`}
@@ -196,6 +237,7 @@ export default function Header() {
               <>
                 <Link
                   href={ROUTES.DASHBOARD}
+                  aria-current={currentPage(pathname, ROUTES.DASHBOARD)}
                   className={`text-gray-700 hover:text-brand font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
                     scrolled ? 'text-sm' : 'text-sm lg:text-base'
                   }`}
@@ -207,6 +249,7 @@ export default function Header() {
                 (session?.user as { role?: string })?.role === 'SUPER_ADMIN' ? (
                   <Link
                     href={ROUTES.ADMIN}
+                    aria-current={currentPage(pathname, ROUTES.ADMIN)}
                     className={`text-gray-700 hover:text-brand font-medium transition-all duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-brand after:transition-all after:duration-200 hover:after:w-full whitespace-nowrap ${
                       scrolled ? 'text-sm' : 'text-sm lg:text-base'
                     }`}
@@ -290,6 +333,7 @@ export default function Header() {
 
               <Link
                 href={ROUTES.HOW_IT_WORKS}
+                aria-current={currentPage(pathname, ROUTES.HOW_IT_WORKS)}
                 className="block text-gray-700 hover:text-brand font-medium transition-colors duration-200 py-2"
                 onClick={closeMobileMenu}
               >
@@ -300,6 +344,7 @@ export default function Header() {
                 <>
                   <Link
                     href={ROUTES.DASHBOARD}
+                    aria-current={currentPage(pathname, ROUTES.DASHBOARD)}
                     className="block text-gray-700 hover:text-brand font-medium transition-colors duration-200 py-2"
                     onClick={closeMobileMenu}
                   >
@@ -310,6 +355,7 @@ export default function Header() {
                   (session?.user as { role?: string })?.role === 'SUPER_ADMIN' ? (
                     <Link
                       href={ROUTES.ADMIN}
+                      aria-current={currentPage(pathname, ROUTES.ADMIN)}
                       className="block text-gray-700 hover:text-brand font-medium transition-colors duration-200 py-2"
                       onClick={closeMobileMenu}
                     >
