@@ -1,6 +1,6 @@
-import Link from 'next/link'
-import { ROUTES } from '@/lib/constants/routes'
-import Image from 'next/image'
+import Link from 'next/link';
+import { ROUTES } from '@/lib/constants/routes';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -10,8 +10,8 @@ export default function Footer() {
           {/* Company Info */}
           <div className="md:col-span-2">
             <div className="mb-4">
-              <Link 
-                href={ROUTES.HOME} 
+              <Link
+                href={ROUTES.HOME}
                 className="inline-block group hover:opacity-80 transition-opacity duration-200"
               >
                 <Image
@@ -24,8 +24,8 @@ export default function Footer() {
               </Link>
             </div>
             <p className="text-on-brand/80 mb-4">
-              Förderung einer nachhaltigen Reparaturkultur in Zürich durch Belohnungen 
-              für Reparaturen statt Neukauf.
+              Förderung einer nachhaltigen Reparaturkultur in Zürich durch Belohnungen für
+              Reparaturen statt Neukauf.
             </p>
             <p className="text-on-brand/60 text-sm">
               Eine Initiative der Stadt Zürich für mehr Nachhaltigkeit.
@@ -39,24 +39,24 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2">
               <li>
-                <Link 
-                  href={ROUTES.SHOPS} 
+                <Link
+                  href={ROUTES.SHOPS}
                   className="text-on-brand/80 hover:text-on-brand transition-colors duration-200"
                 >
                   Werkstätten finden
                 </Link>
               </li>
               <li>
-                <Link 
-                  href={ROUTES.DASHBOARD} 
+                <Link
+                  href={ROUTES.DASHBOARD}
                   className="text-on-brand/80 hover:text-on-brand transition-colors duration-200"
                 >
                   Mein Dashboard
                 </Link>
               </li>
               <li>
-                <Link 
-                  href={ROUTES.AUTH.SIGNUP} 
+                <Link
+                  href={ROUTES.AUTH.SIGNUP}
                   className="text-on-brand/80 hover:text-on-brand transition-colors duration-200"
                 >
                   Registrieren
@@ -72,17 +72,26 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2">
               <li>
-                <a href="mailto:support@reparaturbonus-zh.ch" className="text-on-brand/80 hover:text-on-brand transition-colors duration-200">
+                <a
+                  href="mailto:support@reparaturbonus-zh.ch"
+                  className="text-on-brand/80 hover:text-on-brand transition-colors duration-200"
+                >
                   Kontakt
                 </a>
               </li>
               <li>
-                <a href="#" className="text-on-brand/80 hover:text-on-brand transition-colors duration-200">
+                <a
+                  href="#"
+                  className="text-on-brand/80 hover:text-on-brand transition-colors duration-200"
+                >
                   Häufige Fragen
                 </a>
               </li>
               <li>
-                <a href="#" className="text-on-brand/80 hover:text-on-brand transition-colors duration-200">
+                <a
+                  href="#"
+                  className="text-on-brand/80 hover:text-on-brand transition-colors duration-200"
+                >
                   Datenschutz
                 </a>
               </li>
@@ -97,5 +106,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

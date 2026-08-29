@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* ============================================================================
    Reparaturbonus Zürich — Design Token SSOT
@@ -17,64 +17,64 @@
 /* Tier 1 — primitive palette. Raw values live ONCE, here. Components never
    reference these directly; they exist only to feed the semantic tokens. */
 :root {
-  --primitive-blue-900: #0F2E5C;
-  --primitive-blue-700: #1B4A8F;
-  --primitive-blue-50:  #EEF3FA;
+  --primitive-blue-900: #0f2e5c;
+  --primitive-blue-700: #1b4a8f;
+  --primitive-blue-50: #eef3fa;
 
-  --primitive-copper-700: #9A4E1E;
+  --primitive-copper-700: #9a4e1e;
   /* 600 exists because 500 cannot carry white text: #C26B2D under white is
      3.86:1, below the 4.5 AA floor, and it is the fill behind every primary
      CTA ("Reparatur starten", "Jetzt kostenlos anmelden", "Registrieren").
      #A85A24 is 5.06:1 and still visibly copper. 500 stays in the ramp for
      fills and borders, where the floor is 3:1 and it passes. */
-  --primitive-copper-600: #A85A24;
-  --primitive-copper-500: #C26B2D;
-  --primitive-copper-50:  #FBF1E8;
+  --primitive-copper-600: #a85a24;
+  --primitive-copper-500: #c26b2d;
+  --primitive-copper-50: #fbf1e8;
 
-  --primitive-green-600: #3A8061;
-  --primitive-green-50:  #EEF6F1;
+  --primitive-green-600: #3a8061;
+  --primitive-green-50: #eef6f1;
 
-  --primitive-stone-900: #1C1A17;
-  --primitive-stone-500: #6E665C;
-  --primitive-stone-200: #E4DED4;
-  --primitive-stone-100: #EFEAE1;
-  --primitive-paper:     #F7F5F1;
-  --primitive-white:     #FFFFFF;
+  --primitive-stone-900: #1c1a17;
+  --primitive-stone-500: #6e665c;
+  --primitive-stone-200: #e4ded4;
+  --primitive-stone-100: #efeae1;
+  --primitive-paper: #f7f5f1;
+  --primitive-white: #ffffff;
 }
 
 /* Tier 2 — semantic tokens, defined directly in @theme so Tailwind v4 both
    registers the utility (bg-brand, text-action, …) AND exposes the CSS var.
    Each maps to a Tier-1 primitive: retheme by repointing these references. */
 @theme {
-  --color-brand:        var(--primitive-blue-700);
+  --color-brand: var(--primitive-blue-700);
   --color-brand-strong: var(--primitive-blue-900);
-  --color-brand-soft:   var(--primitive-blue-50);
+  --color-brand-soft: var(--primitive-blue-50);
 
-  --color-action:        var(--primitive-copper-600);
+  --color-action: var(--primitive-copper-600);
   --color-action-strong: var(--primitive-copper-700);
-  --color-action-soft:   var(--primitive-copper-50);
+  --color-action-soft: var(--primitive-copper-50);
 
-  --color-eco:      var(--primitive-green-600);
+  --color-eco: var(--primitive-green-600);
   --color-eco-soft: var(--primitive-green-50);
 
-  --color-bg:          var(--primitive-paper);
-  --color-surface:     var(--primitive-white);
+  --color-bg: var(--primitive-paper);
+  --color-surface: var(--primitive-white);
   --color-surface-alt: var(--primitive-stone-100);
-  --color-border:      var(--primitive-stone-200);
-  --color-text:        var(--primitive-stone-900);
-  --color-text-muted:  var(--primitive-stone-500);
-  --color-on-brand:    var(--primitive-white);
+  --color-border: var(--primitive-stone-200);
+  --color-text: var(--primitive-stone-900);
+  --color-text-muted: var(--primitive-stone-500);
+  --color-on-brand: var(--primitive-white);
 
   --color-background: var(--primitive-paper);
   --color-foreground: var(--primitive-stone-900);
 
   --radius-card: 14px;
-  --radius-btn:  10px;
+  --radius-btn: 10px;
   --radius-pill: 9999px;
 
-  --shadow-sm:   0 1px 2px rgb(15 46 92 / 0.06);
+  --shadow-sm: 0 1px 2px rgb(15 46 92 / 0.06);
   --shadow-card: 0 2px 10px rgb(15 46 92 / 0.07);
-  --shadow-lg:   0 12px 32px rgb(15 46 92 / 0.12);
+  --shadow-lg: 0 12px 32px rgb(15 46 92 / 0.12);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

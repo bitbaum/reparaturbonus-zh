@@ -1,19 +1,19 @@
-import React from 'react'
+import React from 'react';
 
 interface SelectOption {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 interface FormSelectProps {
-  label: string
-  value: string
-  onChange: (value: string) => void
-  options: SelectOption[]
-  placeholder?: string
-  required?: boolean
-  icon?: React.ReactNode
-  helpText?: string
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: SelectOption[];
+  placeholder?: string;
+  required?: boolean;
+  icon?: React.ReactNode;
+  helpText?: string;
 }
 
 export default function FormSelect({
@@ -21,10 +21,10 @@ export default function FormSelect({
   value,
   onChange,
   options,
-  placeholder = "Bitte wählen",
+  placeholder = 'Bitte wählen',
   required = false,
   icon,
-  helpText
+  helpText,
 }: FormSelectProps) {
   return (
     <div>
@@ -39,7 +39,7 @@ export default function FormSelect({
           onChange={(e) => onChange(e.target.value)}
           className="w-full px-3 py-3 pr-10 bg-white border-2 border-gray-400 md:border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none appearance-none cursor-pointer transition-colors"
           style={{
-            color: value ? '#111827' : '#6B7280'
+            color: value ? '#111827' : '#6B7280',
           }}
         >
           <option value="" disabled style={{ color: '#6B7280' }}>
@@ -52,16 +52,17 @@ export default function FormSelect({
           ))}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-          <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="h-4 w-4 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </div>
-      {helpText && (
-        <p className="text-xs text-gray-600 sm:text-gray-500 mt-1">
-          {helpText}
-        </p>
-      )}
+      {helpText && <p className="text-xs text-gray-600 sm:text-gray-500 mt-1">{helpText}</p>}
     </div>
-  )
-} 
+  );
+}

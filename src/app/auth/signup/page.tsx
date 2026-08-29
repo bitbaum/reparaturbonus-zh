@@ -1,9 +1,15 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { EyeIcon, EyeSlashIcon, CheckCircleIcon, UserIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  CheckCircleIcon,
+  UserIcon,
+  BuildingStorefrontIcon,
+} from '@heroicons/react/24/outline';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -11,37 +17,37 @@ export default function SignUp() {
     email: '',
     password: '',
     confirmPassword: '',
-    userType: 'private' as 'private' | 'workshop'
-  })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [redirectingToShop, setRedirectingToShop] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const router = useRouter()
+    userType: 'private' as 'private' | 'workshop',
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [redirectingToShop, setRedirectingToShop] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwörter stimmen nicht überein')
-      setLoading(false)
-      return
+      setError('Passwörter stimmen nicht überein');
+      setLoading(false);
+      return;
     }
 
     if (formData.password.length < 6) {
-      setError('Passwort muss mindestens 6 Zeichen lang sein')
-      setLoading(false)
-      return
+      setError('Passwort muss mindestens 6 Zeichen lang sein');
+      setLoading(false);
+      return;
     }
 
     try {
@@ -56,27 +62,27 @@ export default function SignUp() {
           password: formData.password,
           userType: formData.userType,
         }),
-      })
+      });
 
       if (res.ok) {
-        router.push('/auth/signin?message=Konto erfolgreich erstellt')
+        router.push('/auth/signin?message=Konto erfolgreich erstellt');
       } else {
-        const data = await res.json()
-        setError(data.message || 'Ein Fehler ist aufgetreten')
+        const data = await res.json();
+        setError(data.message || 'Ein Fehler ist aufgetreten');
       }
     } catch {
-      setError('Ein Fehler ist bei der Registrierung aufgetreten')
+      setError('Ein Fehler ist bei der Registrierung aufgetreten');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const benefits = [
     'CHF 100 Reparaturbonus pro Person und Jahr',
     'Annahme der Reparaturen in der Stadt Zürich',
     'Einfache Online-Verwaltung',
-    'Direktabzug von der Rechnung'
-  ]
+    'Direktabzug von der Rechnung',
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -86,13 +92,15 @@ export default function SignUp() {
           <div className="order-2 lg:order-1">
             <div className="max-w-lg">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                Reparaturförderung in Zürich<br />
+                Reparaturförderung in Zürich
+                <br />
                 Machen Sie mit!
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Melden Sie sich beim Reparaturbonus-Programm an und helfen Sie dabei, unsere Umwelt zu schützen.
+                Melden Sie sich beim Reparaturbonus-Programm an und helfen Sie dabei, unsere Umwelt
+                zu schützen.
               </p>
-              
+
               <div className="space-y-4 mb-8">
                 {benefits.map((benefit, index) => (
                   <div key={index} className="flex items-start">
@@ -105,7 +113,8 @@ export default function SignUp() {
               <div className="bg-gradient-to-r from-blue-100 to-green-100 rounded-lg p-6">
                 <h3 className="font-semibold text-gray-900 mb-2">💡 Wussten Sie schon?</h3>
                 <p className="text-gray-700 text-sm">
-                  Die Stadt Zürich fördert Reparaturen von Elektro- und Elektronikgeräten, Kleidern und Schuhen mit einem 3-jährigen Pilotprojekt ab 2026.
+                  Die Stadt Zürich fördert Reparaturen von Elektro- und Elektronikgeräten, Kleidern
+                  und Schuhen mit einem 3-jährigen Pilotprojekt ab 2026.
                 </p>
               </div>
             </div>
@@ -115,19 +124,13 @@ export default function SignUp() {
           <div className="order-1 lg:order-2">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  Konto erstellen
-                </h2>
-                <p className="text-gray-600">
-                  Eröffnen Sie jetzt ein Konto
-                </p>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Konto erstellen</h2>
+                <p className="text-gray-600">Eröffnen Sie jetzt ein Konto</p>
               </div>
 
               {/* User Type Selection */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Ich bin...
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-3">Ich bin...</label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
@@ -150,11 +153,11 @@ export default function SignUp() {
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                     onClick={async () => {
-                      setRedirectingToShop(true)
+                      setRedirectingToShop(true);
                       // Small delay for better UX
                       setTimeout(() => {
-                        router.push('/shop-onboarding')
-                      }, 300)
+                        router.push('/shop-onboarding');
+                      }, 300);
                     }}
                   >
                     {redirectingToShop ? (
@@ -183,7 +186,11 @@ export default function SignUp() {
                     type="text"
                     required
                     className="w-full px-4 py-3 sm:py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
-                    placeholder={formData.userType === 'workshop' ? 'Name Ihres Reparaturbetriebs' : 'Ihr vollständiger Name'}
+                    placeholder={
+                      formData.userType === 'workshop'
+                        ? 'Name Ihres Reparaturbetriebs'
+                        : 'Ihr vollständiger Name'
+                    }
                     value={formData.name}
                     onChange={handleChange}
                   />
@@ -207,7 +214,10 @@ export default function SignUp() {
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Passwort
                   </label>
                   <div className="relative">
@@ -237,7 +247,10 @@ export default function SignUp() {
                 </div>
 
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Passwort bestätigen
                   </label>
                   <div className="relative">
@@ -291,8 +304,8 @@ export default function SignUp() {
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <p className="text-center text-sm text-gray-600">
                   Bereits ein Konto?{' '}
-                  <Link 
-                    href="/auth/signin" 
+                  <Link
+                    href="/auth/signin"
                     className="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors"
                   >
                     Jetzt anmelden
@@ -303,8 +316,8 @@ export default function SignUp() {
 
             {/* Return to homepage link */}
             <div className="text-center mt-6">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
               >
                 ← Zurück zur Startseite
@@ -314,5 +327,5 @@ export default function SignUp() {
         </div>
       </div>
     </div>
-  )
+  );
 }

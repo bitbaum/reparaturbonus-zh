@@ -1,64 +1,69 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
-import Link from 'next/link'
-import { ArrowLeftIcon, HeartIcon, ShareIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import { Shop } from '@/types/shop'
-import { getShop, calculateAverageRating } from '@/lib/demo/shopData'
-import { ShopHeader } from '@/components/shop/ShopHeader'
-import { ShopTabs } from '@/components/shop/ShopTabs'
-import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import {
+  ArrowLeftIcon,
+  HeartIcon,
+  ShareIcon,
+  ExclamationTriangleIcon,
+} from '@heroicons/react/24/outline';
+import { Shop } from '@/types/shop';
+import { getShop, calculateAverageRating } from '@/lib/demo/shopData';
+import { ShopHeader } from '@/components/shop/ShopHeader';
+import { ShopTabs } from '@/components/shop/ShopTabs';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function ShopProfilePage() {
-  const params = useParams()
-  const [shop, setShop] = useState<Shop | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const params = useParams();
+  const [shop, setShop] = useState<Shop | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchShop = async () => {
       try {
-        setLoading(true)
-        setError(null)
-        
+        setLoading(true);
+        setError(null);
+
         // Try to fetch from API first
-        const response = await fetch(`/api/shops/${params.id}`)
+        const response = await fetch(`/api/shops/${params.id}`);
         if (response.ok) {
-          const data = await response.json()
-          setShop(data)
+          const data = await response.json();
+          setShop(data);
         } else {
           // Fallback to demo data with navigation fix
-          const demoShop = getShop(params.id as string)
+          const demoShop = getShop(params.id as string);
           if (demoShop) {
-            setShop(demoShop)
+            setShop(demoShop);
           } else {
-            setError('Diese Werkstatt konnte nicht gefunden werden.')
+            setError('Diese Werkstatt konnte nicht gefunden werden.');
           }
         }
       } catch (error) {
-        console.error('Error fetching shop:', error)
+        console.error('Error fetching shop:', error);
         // Try demo data as final fallback
-        const demoShop = getShop(params.id as string)
+        const demoShop = getShop(params.id as string);
         if (demoShop) {
-          setShop(demoShop)
+          setShop(demoShop);
         } else {
-          setError('Fehler beim Laden der Werkstatt-Daten.')
+          setError('Fehler beim Laden der Werkstatt-Daten.');
         }
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchShop()
-  }, [params.id])
+    fetchShop();
+  }, [params.id]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <LoadingSpinner size="lg" text="Werkstatt-Details werden geladen..." />
       </div>
-    )
+    );
   }
 
   if (error || !shop) {
@@ -75,8 +80,8 @@ export default function ShopProfilePage() {
             Die angeforderte Werkstatt existiert nicht oder ist temporär nicht verfügbar.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              href="/shops" 
+            <Link
+              href="/shops"
               className="inline-flex items-center justify-center px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
             >
               <ArrowLeftIcon className="h-5 w-5 mr-2" />
@@ -91,10 +96,10 @@ export default function ShopProfilePage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  const averageRating = calculateAverageRating(shop.reviews)
+  const averageRating = calculateAverageRating(shop.reviews);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -102,8 +107,8 @@ export default function ShopProfilePage() {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
           <div className="flex items-center justify-between">
-            <Link 
-              href="/shops" 
+            <Link
+              href="/shops"
               className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors group"
             >
               <ArrowLeftIcon className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -132,5 +137,5 @@ export default function ShopProfilePage() {
         <ShopTabs shop={shop} averageRating={averageRating} />
       </div>
     </div>
-  )
-} 
+  );
+}

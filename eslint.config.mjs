@@ -1,9 +1,9 @@
-import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
-import nextTypeScript from "eslint-config-next/typescript";
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import nextTypeScript from 'eslint-config-next/typescript';
 
 const eslintConfig = [
   {
-    ignores: [".next/**", "node_modules/**", "out/**"],
+    ignores: ['.next/**', 'node_modules/**', 'out/**'],
   },
   ...nextCoreWebVitals,
   ...nextTypeScript,
@@ -14,13 +14,13 @@ const eslintConfig = [
     // framework version bump (same precedent as orangecat's eslint.config.mjs).
     // rules-of-hooks and exhaustive-deps stay enabled.
     rules: {
-      "react-hooks/set-state-in-effect": "off",
-      "react-hooks/error-boundaries": "off",
-      "react-hooks/immutability": "off",
-      "react-hooks/refs": "off",
-      "react-hooks/preserve-manual-memoization": "off",
-      "react-hooks/static-components": "off",
-      "react-hooks/purity": "off",
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/error-boundaries': 'off',
+      'react-hooks/immutability': 'off',
+      'react-hooks/refs': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/static-components': 'off',
+      'react-hooks/purity': 'off',
     },
   },
 ];

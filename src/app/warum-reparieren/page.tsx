@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import { ChevronDownIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { 
-  CurrencyEuroIcon, 
-  GlobeEuropeAfricaIcon, 
+import {
+  CurrencyEuroIcon,
+  GlobeEuropeAfricaIcon,
   BuildingStorefrontIcon,
   HeartIcon,
   SparklesIcon,
   ShieldCheckIcon,
-  ChatBubbleLeftRightIcon
+  ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation';
 
@@ -37,13 +37,12 @@ interface FAQItemProps {
   sources?: string[];
 }
 
-
-const BenefitCard: React.FC<BenefitCardProps> = ({ 
-  icon: Icon, 
-  title, 
-  description, 
+const BenefitCard: React.FC<BenefitCardProps> = ({
+  icon: Icon,
+  title,
+  description,
   example,
-  delay = 0
+  delay = 0,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -53,9 +52,11 @@ const BenefitCard: React.FC<BenefitCardProps> = ({
   });
 
   return (
-    <div className={`bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-500 border border-gray-100 transform ${
-      isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-    }`}>
+    <div
+      className={`bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-500 border border-gray-100 transform ${
+        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+      }`}
+    >
       <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg mb-4">
         <Icon className="w-6 h-6 text-white" />
       </div>
@@ -69,7 +70,15 @@ const BenefitCard: React.FC<BenefitCardProps> = ({
   );
 };
 
-const Step: React.FC<StepProps> = ({ number, title, description, highlight = false, clickable = false, onClick, delay = 0 }) => {
+const Step: React.FC<StepProps> = ({
+  number,
+  title,
+  description,
+  highlight = false,
+  clickable = false,
+  onClick,
+  delay = 0,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useState(() => {
@@ -84,19 +93,23 @@ const Step: React.FC<StepProps> = ({ number, title, description, highlight = fal
   };
 
   const Component = clickable ? 'button' : 'div';
-  
+
   return (
-    <Component 
+    <Component
       onClick={handleClick}
       className={`flex items-start space-x-4 p-4 rounded-lg transition-all duration-500 transform w-full text-left ${
         highlight ? 'bg-blue-50 border border-blue-200' : ''
       } ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'} ${
-        clickable ? 'hover:bg-blue-100 hover:border-blue-300 cursor-pointer hover:scale-[1.02] hover:shadow-md' : ''
+        clickable
+          ? 'hover:bg-blue-100 hover:border-blue-300 cursor-pointer hover:scale-[1.02] hover:shadow-md'
+          : ''
       }`}
     >
-      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-        highlight ? 'bg-blue-500 text-white scale-110' : 'bg-gray-200 text-gray-600'
-      }`}>
+      <div
+        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
+          highlight ? 'bg-blue-500 text-white scale-110' : 'bg-gray-200 text-gray-600'
+        }`}
+      >
         {number}
       </div>
       <div className="flex-1">
@@ -128,10 +141,12 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, sources = [] }) => 
           <ChevronDownIcon className="w-5 h-5 text-gray-500 flex-shrink-0" />
         </div>
       </button>
-      
-      <div className={`transition-all duration-300 ease-in-out ${
-        isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-      } overflow-hidden`}>
+
+      <div
+        className={`transition-all duration-300 ease-in-out ${
+          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        } overflow-hidden`}
+      >
         <div className="px-6 pb-6">
           <p className="text-gray-700 leading-relaxed mb-4">{answer}</p>
           {sources.length > 0 && (
@@ -167,8 +182,8 @@ export default function WarumReparierenPage() {
               Warum reparieren statt wegwerfen?
             </h1>
             <p className="text-xl sm:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-delay">
-              Reparieren spart Geld, schützt die Umwelt und stärkt die lokale Wirtschaft. 
-              Entdecken Sie, warum Reparatur die klügere Wahl ist.
+              Reparieren spart Geld, schützt die Umwelt und stärkt die lokale Wirtschaft. Entdecken
+              Sie, warum Reparatur die klügere Wahl ist.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm animate-fade-in-delay-2">
               <div className="flex items-center bg-white/20 px-4 py-2 rounded-full hover:bg-white/30 transition-colors cursor-pointer">
@@ -195,8 +210,8 @@ export default function WarumReparierenPage() {
             Die drei grossen Vorteile des Reparierens
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Reparieren ist nicht nur umweltfreundlich – es macht auch wirtschaftlich Sinn 
-            und stärkt unsere Gemeinschaft.
+            Reparieren ist nicht nur umweltfreundlich – es macht auch wirtschaftlich Sinn und stärkt
+            unsere Gemeinschaft.
           </p>
         </div>
 
@@ -208,7 +223,7 @@ export default function WarumReparierenPage() {
             example="Smartphone-Display reparieren: CHF 150 statt CHF 800 für ein neues Gerät"
             delay={100}
           />
-          
+
           <BenefitCard
             icon={GlobeEuropeAfricaIcon}
             title="Umwelt schützen"
@@ -216,7 +231,7 @@ export default function WarumReparierenPage() {
             example="Ein repariertes Smartphone spart etwa 70 kg CO₂ gegenüber einem Neukauf"
             delay={200}
           />
-          
+
           <BenefitCard
             icon={BuildingStorefrontIcon}
             title="Lokale Wirtschaft stärken"
@@ -231,7 +246,7 @@ export default function WarumReparierenPage() {
           <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Reparieren ist einfach
           </h3>
-          
+
           <div className="max-w-2xl mx-auto space-y-4">
             <Step
               number={1}
@@ -286,7 +301,7 @@ export default function WarumReparierenPage() {
           <h3 className="text-2xl font-bold text-gray-900 mb-6">
             Die Umwelt-Bilanz: Reparieren vs. Neukaufen
           </h3>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="bg-red-50 border border-red-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
               <h4 className="text-lg font-semibold text-red-800 mb-4">❌ Neukauf</h4>
@@ -298,7 +313,7 @@ export default function WarumReparierenPage() {
                 <li>• Hohe CO₂-Emissionen</li>
               </ul>
             </div>
-            
+
             <div className="bg-green-50 border border-green-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300">
               <h4 className="text-lg font-semibold text-green-800 mb-4">✅ Reparatur</h4>
               <ul className="text-left space-y-2 text-green-700">
@@ -317,7 +332,7 @@ export default function WarumReparierenPage() {
           <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Erfolgsgeschichten aus Zürich
           </h3>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
               <div className="flex items-center mb-4">
@@ -330,12 +345,12 @@ export default function WarumReparierenPage() {
                 </div>
               </div>
               <p className="text-gray-700 text-sm leading-relaxed">
-                &quot;Unsere 8 Jahre alte Waschmaschine war defekt. Statt CHF 1&apos;200 für eine neue
-                auszugeben, liessen wir sie für CHF 180 reparieren. Sie läuft jetzt seit
-                2 Jahren einwandfrei weiter.&quot;
+                &quot;Unsere 8 Jahre alte Waschmaschine war defekt. Statt CHF 1&apos;200 für eine
+                neue auszugeben, liessen wir sie für CHF 180 reparieren. Sie läuft jetzt seit 2
+                Jahren einwandfrei weiter.&quot;
               </p>
             </div>
-            
+
             <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center">
@@ -347,8 +362,8 @@ export default function WarumReparierenPage() {
                 </div>
               </div>
               <p className="text-gray-700 text-sm leading-relaxed">
-                &quot;Als Student konnte ich mir keinen neuen Laptop leisten. Die Reparatur
-                kostete nur CHF 220 statt CHF 1&apos;500 für einen neuen. Perfekte Lösung!&quot;
+                &quot;Als Student konnte ich mir keinen neuen Laptop leisten. Die Reparatur kostete
+                nur CHF 220 statt CHF 1&apos;500 für einen neuen. Perfekte Lösung!&quot;
               </p>
             </div>
           </div>
@@ -359,30 +374,30 @@ export default function WarumReparierenPage() {
           <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Häufige Fragen zur Reparatur
           </h3>
-          
+
           <div className="max-w-3xl mx-auto space-y-4">
             <FAQItem
               question="Lohnt sich eine Reparatur immer?"
               answer="Als Faustregel gilt: Wenn die Reparatur weniger als 50% des Neukaufpreises kostet und das Gerät noch nicht sehr alt ist, lohnt sich meist eine Reparatur. Bei hochwertigen Geräten kann sich auch eine teurere Reparatur lohnen."
-              sources={["Konsumentenschutz Schweiz", "Stiftung für Konsumentenschutz"]}
+              sources={['Konsumentenschutz Schweiz', 'Stiftung für Konsumentenschutz']}
             />
-            
+
             <FAQItem
               question="Wie finde ich einen seriösen Reparaturbetrieb?"
               answer="Achten Sie auf Zertifizierungen, lesen Sie Bewertungen, fragen Sie nach Garantie auf die Reparatur und lassen Sie sich einen schriftlichen Kostenvoranschlag geben. Unsere Plattform listet nur geprüfte Betriebe auf."
-              sources={["Reparaturführer Schweiz", "Berufsverbände"]}
+              sources={['Reparaturführer Schweiz', 'Berufsverbände']}
             />
-            
+
             <FAQItem
               question="Was passiert, wenn die Reparatur nicht gelingt?"
               answer="Seriöse Betriebe bieten meist eine 'Kein Erfolg, keine Kosten'-Garantie für die Diagnose. Für durchgeführte Arbeiten gibt es normalerweise Gewährleistung. Klären Sie dies vor der Reparatur ab."
-              sources={["Konsumentenrecht Schweiz"]}
+              sources={['Konsumentenrecht Schweiz']}
             />
-            
+
             <FAQItem
               question="Wie umweltfreundlich ist Reparieren wirklich?"
               answer="Studien zeigen, dass Reparaturen den CO₂-Fussabdruck um 70-90% reduzieren können im Vergleich zum Neukauf. Auch der Ressourcenverbrauch sinkt dramatisch, da keine neuen Rohstoffe abgebaut werden müssen."
-              sources={["Bundesamt für Umwelt BAFU", "Europäische Umweltagentur"]}
+              sources={['Bundesamt für Umwelt BAFU', 'Europäische Umweltagentur']}
             />
           </div>
         </div>
@@ -391,12 +406,11 @@ export default function WarumReparierenPage() {
         <div className="text-center bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-8 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-indigo-700/20 animate-pulse"></div>
           <div className="relative">
-            <h3 className="text-2xl font-bold mb-4">
-              Bereit für Ihre erste Reparatur?
-            </h3>
+            <h3 className="text-2xl font-bold mb-4">Bereit für Ihre erste Reparatur?</h3>
             <p className="text-lg text-blue-100 mb-6 max-w-2xl mx-auto">
-              Beschreiben Sie Ihr Problem und finden Sie sofort passende Werkstätten mit Kosteneinschätzung. 
-              Finden Sie dann qualifizierte Reparaturbetriebe und senden Sie direkte Anfragen.
+              Beschreiben Sie Ihr Problem und finden Sie sofort passende Werkstätten mit
+              Kosteneinschätzung. Finden Sie dann qualifizierte Reparaturbetriebe und senden Sie
+              direkte Anfragen.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
@@ -420,32 +434,52 @@ export default function WarumReparierenPage() {
 
       <style jsx>{`
         @keyframes fade-in {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
-        
+
         @keyframes fade-in-delay {
-          0%, 30% { opacity: 0; transform: translateY(20px); }
-          100% { opacity: 1; transform: translateY(0); }
+          0%,
+          30% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
-        
+
         @keyframes fade-in-delay-2 {
-          0%, 60% { opacity: 0; transform: translateY(20px); }
-          100% { opacity: 1; transform: translateY(0); }
+          0%,
+          60% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
-        
+
         .animate-fade-in {
           animation: fade-in 0.8s ease-out forwards;
         }
-        
+
         .animate-fade-in-delay {
           animation: fade-in-delay 1.2s ease-out forwards;
         }
-        
+
         .animate-fade-in-delay-2 {
           animation: fade-in-delay-2 1.6s ease-out forwards;
         }
       `}</style>
     </div>
   );
-} 
+}

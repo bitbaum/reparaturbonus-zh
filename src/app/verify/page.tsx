@@ -1,111 +1,116 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { QrCodeIcon, CheckCircleIcon, XCircleIcon, DocumentIcon } from '@heroicons/react/24/outline'
-import PageHeader from '@/components/ui/PageHeader'
-import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import { useState } from 'react';
+import {
+  QrCodeIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  DocumentIcon,
+} from '@heroicons/react/24/outline';
+import PageHeader from '@/components/ui/PageHeader';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 interface BonusCode {
-  id: string
-  code: string
-  amount: number
-  isUsed: boolean
-  expiresAt: string
+  id: string;
+  code: string;
+  amount: number;
+  isUsed: boolean;
+  expiresAt: string;
   user: {
-    name: string
-    email: string
-  }
+    name: string;
+    email: string;
+  };
   shop: {
-    name: string
-  }
+    name: string;
+  };
 }
 
 export default function VerifyPage() {
-  const [code, setCode] = useState('')
-  const [bonusCode, setBonusCode] = useState<BonusCode | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [verified, setVerified] = useState(false)
-  const [residenceProof, setResidenceProof] = useState<File | null>(null)
+  const [code, setCode] = useState('');
+  const [bonusCode, setBonusCode] = useState<BonusCode | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [verified, setVerified] = useState(false);
+  const [residenceProof, setResidenceProof] = useState<File | null>(null);
 
   const handleVerifyCode = async () => {
     if (!code.trim()) {
-      setError('Bitte geben Sie einen Bonus-Code ein')
-      return
+      setError('Bitte geben Sie einen Bonus-Code ein');
+      return;
     }
 
-    setLoading(true)
-    setError('')
-    setBonusCode(null)
+    setLoading(true);
+    setError('');
+    setBonusCode(null);
 
     try {
-      const response = await fetch(`/api/bonus-codes/${code}?verify=true`)
+      const response = await fetch(`/api/bonus-codes/${code}?verify=true`);
       if (response.ok) {
-        const data = await response.json()
-        setBonusCode(data)
+        const data = await response.json();
+        setBonusCode(data);
         if (data.isUsed) {
-          setError('Dieser Bonus-Code wurde bereits verwendet')
+          setError('Dieser Bonus-Code wurde bereits verwendet');
         } else if (new Date() > new Date(data.expiresAt)) {
-          setError('Dieser Bonus-Code ist abgelaufen')
+          setError('Dieser Bonus-Code ist abgelaufen');
         }
       } else if (response.status === 404) {
-        setError('Bonus-Code nicht gefunden')
+        setError('Bonus-Code nicht gefunden');
       } else {
-        setError('Fehler beim Überprüfen des Codes')
+        setError('Fehler beim Überprüfen des Codes');
       }
     } catch {
-      setError('Netzwerkfehler beim Überprüfen des Codes')
+      setError('Netzwerkfehler beim Überprüfen des Codes');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleUseCode = async () => {
     if (!bonusCode || !residenceProof) {
-      setError('Bitte laden Sie einen Wohnsitznachweis hoch')
-      return
+      setError('Bitte laden Sie einen Wohnsitznachweis hoch');
+      return;
     }
 
-    setLoading(true)
-    
+    setLoading(true);
+
     try {
-      const formData = new FormData()
-      formData.append('residenceProof', residenceProof)
+      const formData = new FormData();
+      formData.append('residenceProof', residenceProof);
 
       const response = await fetch(`/api/bonus-codes/${bonusCode.code}/use`, {
         method: 'POST',
         body: formData,
-      })
+      });
 
       if (response.ok) {
-        setVerified(true)
-        setBonusCode({ ...bonusCode, isUsed: true })
+        setVerified(true);
+        setBonusCode({ ...bonusCode, isUsed: true });
       } else {
-        setError('Fehler beim Einlösen des Codes')
+        setError('Fehler beim Einlösen des Codes');
       }
     } catch {
-      setError('Netzwerkfehler beim Einlösen des Codes')
+      setError('Netzwerkfehler beim Einlösen des Codes');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('de-CH', {
       style: 'currency',
-      currency: 'CHF'
-    }).format(amount)
-  }
+      currency: 'CHF',
+    }).format(amount);
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('de-CH')
-  }
+    return new Date(dateString).toLocaleDateString('de-CH');
+  };
 
-  const isCodeValid = bonusCode && !bonusCode.isUsed && new Date() < new Date(bonusCode.expiresAt)
+  const isCodeValid = bonusCode && !bonusCode.isUsed && new Date() < new Date(bonusCode.expiresAt);
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <PageHeader 
+      <PageHeader
         title="Bonus-Code Überprüfung"
         subtitle="Überprüfen und einlösen Sie Bonus-Codes für Ihre Kunden"
       />
@@ -165,21 +170,25 @@ export default function VerifyPage() {
                 <div className="mb-6 p-4 border border-gray-200 rounded-lg">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900">Bonus-Code: {bonusCode.code}</h3>
+                      <h3 className="text-lg font-medium text-gray-900">
+                        Bonus-Code: {bonusCode.code}
+                      </h3>
                       <p className="text-sm text-gray-500">Kunde: {bonusCode.user.name}</p>
                     </div>
                     <div className="text-right">
                       <div className="text-xl font-semibold text-gray-900">
                         {formatCurrency(bonusCode.amount)}
                       </div>
-                      <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        isCodeValid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
+                      <div
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          isCodeValid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}
+                      >
                         {isCodeValid ? 'Gültig' : bonusCode.isUsed ? 'Verwendet' : 'Abgelaufen'}
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                     <div>Gültig bis: {formatDate(bonusCode.expiresAt)}</div>
                     <div>Werkstatt: {bonusCode.shop.name}</div>
@@ -188,15 +197,22 @@ export default function VerifyPage() {
                   {/* Residence Proof Upload */}
                   {isCodeValid && (
                     <div className="mt-6 pt-6 border-t border-gray-200">
-                      <label htmlFor="residenceProof" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="residenceProof"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Wohnsitznachweis hochladen (erforderlich)
                       </label>
                       <div className="flex items-center justify-center w-full">
-                        <label htmlFor="residenceProof" className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                        <label
+                          htmlFor="residenceProof"
+                          className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                        >
                           <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <DocumentIcon className="w-8 h-8 mb-4 text-gray-500" />
                             <p className="mb-2 text-sm text-gray-500">
-                              <span className="font-semibold">Klicken zum Hochladen</span> oder Datei hierher ziehen
+                              <span className="font-semibold">Klicken zum Hochladen</span> oder
+                              Datei hierher ziehen
                             </p>
                             <p className="text-xs text-gray-500">PDF, PNG, JPG (MAX. 5MB)</p>
                           </div>
@@ -220,7 +236,11 @@ export default function VerifyPage() {
                         disabled={loading || !residenceProof}
                         className="mt-4 w-full bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                       >
-                        {loading ? <LoadingSpinner size="sm" /> : `Bonus einlösen (${formatCurrency(bonusCode.amount)})`}
+                        {loading ? (
+                          <LoadingSpinner size="sm" />
+                        ) : (
+                          `Bonus einlösen (${formatCurrency(bonusCode.amount)})`
+                        )}
                       </button>
                     </div>
                   )}
@@ -231,17 +251,20 @@ export default function VerifyPage() {
             /* Success State */
             <div className="text-center py-8">
               <CheckCircleIcon className="h-16 w-16 text-green-500 mx-auto mb-4" />
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2">Bonus erfolgreich eingelöst!</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+                Bonus erfolgreich eingelöst!
+              </h2>
               <p className="text-gray-600 mb-4">
-                Der Rabatt von {bonusCode && formatCurrency(bonusCode.amount)} wurde vom Reparaturbetrag abgezogen.
+                Der Rabatt von {bonusCode && formatCurrency(bonusCode.amount)} wurde vom
+                Reparaturbetrag abgezogen.
               </p>
               <button
                 onClick={() => {
-                  setCode('')
-                  setBonusCode(null)
-                  setVerified(false)
-                  setResidenceProof(null)
-                  setError('')
+                  setCode('');
+                  setBonusCode(null);
+                  setVerified(false);
+                  setResidenceProof(null);
+                  setError('');
                 }}
                 className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
               >
@@ -263,5 +286,5 @@ export default function VerifyPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

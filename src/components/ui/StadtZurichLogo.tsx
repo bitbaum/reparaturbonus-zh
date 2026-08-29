@@ -1,12 +1,16 @@
-import React from 'react'
+import React from 'react';
 
 interface StadtZurichLogoProps {
-  className?: string
-  width?: number
-  height?: number
+  className?: string;
+  width?: number;
+  height?: number;
 }
 
-export default function StadtZurichLogo({ className = '', width = 240, height = 60 }: StadtZurichLogoProps) {
+export default function StadtZurichLogo({
+  className = '',
+  width = 240,
+  height = 60,
+}: StadtZurichLogoProps) {
   return (
     <svg
       width={width}
@@ -24,7 +28,7 @@ export default function StadtZurichLogo({ className = '', width = 240, height = 
           stroke="#003f7f"
           strokeWidth="1"
         />
-        
+
         {/* Diagonal stripes */}
         <g fill="#ffffff">
           <rect x="21" y="6" width="1" height="8" transform="rotate(45 21.5 10)" />
@@ -35,13 +39,13 @@ export default function StadtZurichLogo({ className = '', width = 240, height = 
           <rect x="31" y="6" width="1" height="8" transform="rotate(45 31.5 10)" />
           <rect x="33" y="6" width="1" height="8" transform="rotate(45 33.5 10)" />
         </g>
-        
+
         {/* Crossed tools */}
         <g fill="#ffffff" stroke="#ffffff" strokeWidth="0.5">
           {/* Left tool (hammer) */}
           <rect x="15" y="12" width="6" height="1" />
           <rect x="14" y="11" width="2" height="3" />
-          
+
           {/* Right tool (wrench) */}
           <rect x="34" y="12" width="6" height="1" />
           <circle cx="41" cy="12.5" r="1.5" fill="none" stroke="#ffffff" strokeWidth="0.5" />
@@ -54,12 +58,12 @@ export default function StadtZurichLogo({ className = '', width = 240, height = 
         <text x="60" y="20" fontSize="12" fontWeight="600" fontFamily="Arial, sans-serif">
           Stadt Zürich
         </text>
-        
+
         {/* "Reparaturbonus" */}
         <text x="60" y="40" fontSize="16" fontWeight="700" fontFamily="Arial, sans-serif">
           Reparaturbonus
         </text>
       </g>
     </svg>
-  )
-} 
+  );
+}

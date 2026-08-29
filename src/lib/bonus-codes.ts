@@ -1,5 +1,5 @@
-const CODE_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-const CODE_LENGTH = 8
+const CODE_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+const CODE_LENGTH = 8;
 
 /**
  * A bonus code is a bearer token: whoever presents it gets CHF 100. It is
@@ -20,36 +20,36 @@ const CODE_LENGTH = 8
  * Bytes at or above the largest usable multiple are discarded and redrawn.
  */
 export function generateBonusCode(): string {
-  const limit = Math.floor(256 / CODE_ALPHABET.length) * CODE_ALPHABET.length // 252
-  let result = ''
+  const limit = Math.floor(256 / CODE_ALPHABET.length) * CODE_ALPHABET.length; // 252
+  let result = '';
 
   while (result.length < CODE_LENGTH) {
-    const bytes = new Uint8Array(CODE_LENGTH)
-    globalThis.crypto.getRandomValues(bytes)
+    const bytes = new Uint8Array(CODE_LENGTH);
+    globalThis.crypto.getRandomValues(bytes);
     for (const byte of bytes) {
-      if (byte >= limit) continue // would bias the distribution — redraw
-      result += CODE_ALPHABET.charAt(byte % CODE_ALPHABET.length)
-      if (result.length === CODE_LENGTH) break
+      if (byte >= limit) continue; // would bias the distribution — redraw
+      result += CODE_ALPHABET.charAt(byte % CODE_ALPHABET.length);
+      if (result.length === CODE_LENGTH) break;
     }
   }
 
-  return result
+  return result;
 }
 
 export function calculateBonusAmount(): number {
   // Fixed bonus amount: CHF 100 reserved for one month
-  return 100
+  return 100;
 }
 
 export function getBonusExpiryDate(): Date {
   // Bonus codes expire 1 month from creation
-  const expiryDate = new Date()
-  expiryDate.setMonth(expiryDate.getMonth() + 1)
-  return expiryDate
+  const expiryDate = new Date();
+  expiryDate.setMonth(expiryDate.getMonth() + 1);
+  return expiryDate;
 }
 
 export function isValidBonusCode(code: string): boolean {
   // Basic validation: 8 characters, alphanumeric
-  const codeRegex = /^[A-Z0-9]{8}$/
-  return codeRegex.test(code)
+  const codeRegex = /^[A-Z0-9]{8}$/;
+  return codeRegex.test(code);
 }

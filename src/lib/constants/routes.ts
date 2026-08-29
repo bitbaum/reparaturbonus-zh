@@ -14,8 +14,8 @@ export const ROUTES = {
     SHOPS: '/api/shops',
     BONUS_CODES: '/api/bonus-codes',
     AUTH: '/api/auth',
-  }
-} as const
+  },
+} as const;
 
 export const PUBLIC_ROUTES = [
   ROUTES.HOME,
@@ -25,12 +25,8 @@ export const PUBLIC_ROUTES = [
   ROUTES.VERIFY,
   ROUTES.AUTH.SIGNIN,
   ROUTES.AUTH.SIGNUP,
-] as const
+] as const;
 
-export const PROTECTED_ROUTES = [
-  ROUTES.DASHBOARD,
-] as const
+export const PROTECTED_ROUTES = [ROUTES.DASHBOARD] as const;
 
-export const ADMIN_ROUTES = [
-  ROUTES.ADMIN,
-] as const
+export const ADMIN_ROUTES = [ROUTES.ADMIN] as const;

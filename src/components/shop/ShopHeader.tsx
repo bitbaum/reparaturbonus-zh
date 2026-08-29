@@ -1,18 +1,18 @@
-import { Shop } from '@/types/shop'
-import { CATEGORY_LABELS, getCategoryIcon } from '@/types/shop'
-import { 
-  MapPinIcon, 
-  PhoneIcon, 
-  GlobeAltIcon, 
+import { Shop } from '@/types/shop';
+import { CATEGORY_LABELS, getCategoryIcon } from '@/types/shop';
+import {
+  MapPinIcon,
+  PhoneIcon,
+  GlobeAltIcon,
   StarIcon,
   EnvelopeIcon,
   CalendarDaysIcon,
-  ChatBubbleLeftRightIcon
-} from '@heroicons/react/24/outline'
+  ChatBubbleLeftRightIcon,
+} from '@heroicons/react/24/outline';
 
 interface ShopHeaderProps {
-  shop: Shop
-  averageRating: number
+  shop: Shop;
+  averageRating: number;
 }
 
 export function ShopHeader({ shop, averageRating }: ShopHeaderProps) {
@@ -33,11 +33,17 @@ export function ShopHeader({ shop, averageRating }: ShopHeaderProps) {
                   </span>
                   <div className="flex items-center">
                     <StarIcon className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400 mr-1" />
-                    <span className="text-sm sm:text-base font-medium">{averageRating.toFixed(1)}</span>
-                    <span className="text-xs sm:text-sm ml-1">({shop.reviews?.length || 0} Bewertungen)</span>
+                    <span className="text-sm sm:text-base font-medium">
+                      {averageRating.toFixed(1)}
+                    </span>
+                    <span className="text-xs sm:text-sm ml-1">
+                      ({shop.reviews?.length || 0} Bewertungen)
+                    </span>
                   </div>
                   {shop.experienceYears && (
-                    <span className="text-xs sm:text-sm">{shop.experienceYears}+ Jahre Erfahrung</span>
+                    <span className="text-xs sm:text-sm">
+                      {shop.experienceYears}+ Jahre Erfahrung
+                    </span>
                   )}
                 </div>
                 <p className="text-indigo-100 text-sm sm:text-base lg:text-lg leading-relaxed">
@@ -49,10 +55,12 @@ export function ShopHeader({ shop, averageRating }: ShopHeaderProps) {
             {/* Specializations */}
             {shop.specializations && (
               <div className="mb-4 sm:mb-6">
-                <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-center sm:text-left">Spezialisierungen</h3>
+                <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-center sm:text-left">
+                  Spezialisierungen
+                </h3>
                 <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                   {shop.specializations.map((spec, index) => (
-                    <span 
+                    <span
                       key={index}
                       className="px-2 sm:px-3 py-1 bg-white/20 rounded-full text-xs sm:text-sm font-medium"
                     >
@@ -66,21 +74,28 @@ export function ShopHeader({ shop, averageRating }: ShopHeaderProps) {
 
           {/* Contact Card */}
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/20">
-            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-center lg:text-left">Kontakt & Öffnungszeiten</h3>
-            
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-center lg:text-left">
+              Kontakt & Öffnungszeiten
+            </h3>
+
             <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
               <div className="flex items-start">
                 <MapPinIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 mt-0.5 flex-shrink-0" />
                 <div>
                   <div className="text-sm sm:text-base font-medium">{shop.address}</div>
-                  <div className="text-xs sm:text-sm text-indigo-100">{shop.postalCode} {shop.city}</div>
+                  <div className="text-xs sm:text-sm text-indigo-100">
+                    {shop.postalCode} {shop.city}
+                  </div>
                 </div>
               </div>
 
               {shop.phone && (
                 <div className="flex items-center">
                   <PhoneIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 flex-shrink-0" />
-                  <a href={`tel:${shop.phone}`} className="text-sm sm:text-base hover:text-indigo-200 transition-colors">
+                  <a
+                    href={`tel:${shop.phone}`}
+                    className="text-sm sm:text-base hover:text-indigo-200 transition-colors"
+                  >
                     {shop.phone}
                   </a>
                 </div>
@@ -89,7 +104,10 @@ export function ShopHeader({ shop, averageRating }: ShopHeaderProps) {
               {shop.email && (
                 <div className="flex items-center">
                   <EnvelopeIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 flex-shrink-0" />
-                  <a href={`mailto:${shop.email}`} className="text-sm sm:text-base hover:text-indigo-200 transition-colors break-all">
+                  <a
+                    href={`mailto:${shop.email}`}
+                    className="text-sm sm:text-base hover:text-indigo-200 transition-colors break-all"
+                  >
                     {shop.email}
                   </a>
                 </div>
@@ -98,9 +116,9 @@ export function ShopHeader({ shop, averageRating }: ShopHeaderProps) {
               {shop.website && (
                 <div className="flex items-center">
                   <GlobeAltIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 flex-shrink-0" />
-                  <a 
-                    href={shop.website} 
-                    target="_blank" 
+                  <a
+                    href={shop.website}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm sm:text-base hover:text-indigo-200 transition-colors"
                   >
@@ -134,5 +152,5 @@ export function ShopHeader({ shop, averageRating }: ShopHeaderProps) {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

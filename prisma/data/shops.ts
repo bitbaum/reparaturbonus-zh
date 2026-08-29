@@ -1,4 +1,4 @@
-import { ShopCategory } from '../../src/generated/prisma/client'
+import { ShopCategory } from '../../src/generated/prisma/client';
 
 /**
  * Shop seed data — SSOT for both `seed.ts` (full dev reseed) and
@@ -9,19 +9,19 @@ import { ShopCategory } from '../../src/generated/prisma/client'
  */
 
 export type SeedShop = {
-  name: string
-  description: string
-  address: string
-  city: string
-  postalCode: string
-  phone: string | null
-  email: string | null
-  website: string | null
-  category: ShopCategory
-  latitude: number
-  longitude: number
-  isActive: boolean
-}
+  name: string;
+  description: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  category: ShopCategory;
+  latitude: number;
+  longitude: number;
+  isActive: boolean;
+};
 
 /** Real, production-grade listing. Verkaufsstelle / customer-facing repair point. */
 export const REVAMPIT_SHOP: SeedShop = {
@@ -38,7 +38,7 @@ export const REVAMPIT_SHOP: SeedShop = {
   latitude: 47.3815,
   longitude: 8.5237,
   isActive: true,
-}
+};
 
 /** Illustrative placeholder shops — dev/demo seeding only. */
 export const DEMO_SHOPS: SeedShop[] = [
@@ -87,7 +87,7 @@ export const DEMO_SHOPS: SeedShop[] = [
     longitude: 8.5169,
     isActive: true,
   },
-]
+];
 
 /** Full set for dev reseed: the real shop plus demo placeholders. */
-export const SEED_SHOPS: SeedShop[] = [REVAMPIT_SHOP, ...DEMO_SHOPS]
+export const SEED_SHOPS: SeedShop[] = [REVAMPIT_SHOP, ...DEMO_SHOPS];

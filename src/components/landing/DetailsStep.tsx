@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import { ArrowRight, Camera, Lightbulb, Search } from 'lucide-react'
-import { findRepairCategory } from '@/lib/constants/repair-categories'
+import { ArrowRight, Camera, Lightbulb, Search } from 'lucide-react';
+import { findRepairCategory } from '@/lib/constants/repair-categories';
 
 interface DetailsStepProps {
-  categoryId: string
-  itemDescription: string
-  problemDescription: string
-  onItemChange: (value: string) => void
-  onProblemChange: (value: string) => void
-  onSubmit: () => void
-  onBack: () => void
-  onSkip: () => void
+  categoryId: string;
+  itemDescription: string;
+  problemDescription: string;
+  onItemChange: (value: string) => void;
+  onProblemChange: (value: string) => void;
+  onSubmit: () => void;
+  onBack: () => void;
+  onSkip: () => void;
 }
 
 /** Wizard step 2: describe the item (optional details before finding shops). */
@@ -25,8 +25,8 @@ export default function DetailsStep({
   onBack,
   onSkip,
 }: DetailsStepProps) {
-  const category = findRepairCategory(categoryId)
-  const Icon = category?.icon
+  const category = findRepairCategory(categoryId);
+  const Icon = category?.icon;
 
   return (
     <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -120,5 +120,5 @@ export default function DetailsStep({
         </div>
       </div>
     </section>
-  )
+  );
 }

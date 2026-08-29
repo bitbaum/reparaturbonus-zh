@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { ChevronRightIcon, UserIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react';
+import Link from 'next/link';
+import { ChevronRightIcon, UserIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline';
 
 export default function HowItWorksPage() {
-  const [activeTab, setActiveTab] = useState<'private' | 'workshop'>('private')
+  const [activeTab, setActiveTab] = useState<'private' | 'workshop'>('private');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
@@ -55,9 +55,12 @@ export default function HowItWorksPage() {
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-blue-600">1</span>
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Registrieren und Reparaturbonus generieren</h3>
+                <h3 className="text-xl font-semibold mb-3">
+                  Registrieren und Reparaturbonus generieren
+                </h3>
                 <p className="text-gray-600">
-                  Registrieren Sie sich hier auf der Plattform und erstellen Sie einen Reparaturbonus.
+                  Registrieren Sie sich hier auf der Plattform und erstellen Sie einen
+                  Reparaturbonus.
                 </p>
               </div>
 
@@ -67,7 +70,8 @@ export default function HowItWorksPage() {
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Reparaturbetrieb finden</h3>
                 <p className="text-gray-600">
-                  Suchen Sie mit den Angaben zu Ihrem defekten Gegenstand und ihrer Adresse auf der Plattform einen passenden Repraturbetrieb in Ihrer Nähe. 
+                  Suchen Sie mit den Angaben zu Ihrem defekten Gegenstand und ihrer Adresse auf der
+                  Plattform einen passenden Repraturbetrieb in Ihrer Nähe.
                 </p>
               </div>
 
@@ -75,16 +79,21 @@ export default function HowItWorksPage() {
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-blue-600">3</span>
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Reparatur durchführen und Bonus abrechnen</h3>
+                <h3 className="text-xl font-semibold mb-3">
+                  Reparatur durchführen und Bonus abrechnen
+                </h3>
                 <p className="text-gray-600">
-                  Bringen Sie Ihren defekten Artikel zum Reparaturbetrieb und lassen die Reparatur ausführen.
-                  Nach Abschluss der Reparatur bezahlen Sie 50% bzw. maximal 100 Franken weniger als den Preis der Reparatur.
+                  Bringen Sie Ihren defekten Artikel zum Reparaturbetrieb und lassen die Reparatur
+                  ausführen. Nach Abschluss der Reparatur bezahlen Sie 50% bzw. maximal 100 Franken
+                  weniger als den Preis der Reparatur.
                 </p>
               </div>
             </div>
 
             <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-2xl font-bold mb-6 text-blue-600">Voraussetzungen für Privatpersonen</h2>
+              <h2 className="text-2xl font-bold mb-6 text-blue-600">
+                Voraussetzungen für Privatpersonen
+              </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-lg font-semibold mb-3">✓ Berechtigung</h3>
@@ -108,17 +117,18 @@ export default function HowItWorksPage() {
             <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-8 text-white text-center">
               <h2 className="text-2xl font-bold mb-4">Bereit für Ihre Reparatur?</h2>
               <p className="text-blue-100 mb-6">
-                Finden Sie jetzt einen teilnehmenden Reparaturbetrieb in Ihrer Nähe und nutzen Sie Ihren CHF 100 Reparaturbonus.
+                Finden Sie jetzt einen teilnehmenden Reparaturbetrieb in Ihrer Nähe und nutzen Sie
+                Ihren CHF 100 Reparaturbonus.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link 
-                  href="/auth/signup" 
+                <Link
+                  href="/auth/signup"
                   className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors inline-flex items-center justify-center"
                 >
                   Konto erstellen und Bonus generieren
                 </Link>
-                <Link 
-                  href="/shops" 
+                <Link
+                  href="/shops"
                   className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors inline-flex items-center justify-center"
                 >
                   Reparaturbetriebe finden
@@ -165,7 +175,9 @@ export default function HowItWorksPage() {
             </div>
 
             <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-2xl font-bold mb-6 text-green-600">Voraussetzungen für Reparaturbetriebe</h2>
+              <h2 className="text-2xl font-bold mb-6 text-green-600">
+                Voraussetzungen für Reparaturbetriebe
+              </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-lg font-semibold mb-3">🏪 Betrieb</h3>
@@ -194,21 +206,28 @@ export default function HowItWorksPage() {
                     <span className="text-green-600 font-bold">💰</span>
                   </div>
                   <h3 className="font-semibold mb-2">Neue Kund*innen</h3>
-                  <p className="text-gray-600 text-sm">Erreichen Sie neue Kund*innen durch das Reparaturbonus-Programm</p>
+                  <p className="text-gray-600 text-sm">
+                    Erreichen Sie neue Kund*innen durch das Reparaturbonus-Programm
+                  </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <span className="text-green-600 font-bold">🌱</span>
                   </div>
                   <h3 className="font-semibold mb-2">Nachhaltigkeit</h3>
-                  <p className="text-gray-600 text-sm">Unterstützen Sie die Kreislaufwirtschaft und Nachhaltigkeit</p>
+                  <p className="text-gray-600 text-sm">
+                    Unterstützen Sie die Kreislaufwirtschaft und Nachhaltigkeit
+                  </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <span className="text-green-600 font-bold">📈</span>
                   </div>
                   <h3 className="font-semibold mb-2">Einkommen sichern</h3>
-                  <p className="text-gray-600 text-sm">Sichern Sie durch kostendeckende Reparaturen den Weiterbestand Ihres Betriebs </p>
+                  <p className="text-gray-600 text-sm">
+                    Sichern Sie durch kostendeckende Reparaturen den Weiterbestand Ihres
+                    Betriebs{' '}
+                  </p>
                 </div>
               </div>
             </div>
@@ -216,11 +235,12 @@ export default function HowItWorksPage() {
             <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-lg p-8 text-white text-center">
               <h2 className="text-2xl font-bold mb-4">Werden Sie Partner*in!</h2>
               <p className="text-green-100 mb-6">
-                Registrieren Sie Ihren Reparaturbetrieb und nehmen Sie teil am Reparaturbonus-Programm der Stadt Zürich.
+                Registrieren Sie Ihren Reparaturbetrieb und nehmen Sie teil am
+                Reparaturbonus-Programm der Stadt Zürich.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link 
-                  href="/auth/signup" 
+                <Link
+                  href="/auth/signup"
                   className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors inline-flex items-center justify-center"
                 >
                   Betrieb registrieren

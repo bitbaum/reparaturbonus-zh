@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { InformationCircleIcon } from '@heroicons/react/24/outline'
-import FormInput from './FormInput'
-import FormSelect from './FormSelect'
+import { useState } from 'react';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import FormInput from './FormInput';
+import FormSelect from './FormSelect';
 
 // Centralized form configuration
 const legalFormOptions = [
@@ -15,8 +15,8 @@ const legalFormOptions = [
   { value: 'Genossenschaft', label: 'Genossenschaft' },
   { value: 'Kollektivgesellschaft', label: 'Kollektivgesellschaft' },
   { value: 'Kommanditgesellschaft', label: 'Kommanditgesellschaft' },
-  { value: 'Kommanditaktiengesellschaft', label: 'Kommanditaktiengesellschaft' }
-]
+  { value: 'Kommanditaktiengesellschaft', label: 'Kommanditaktiengesellschaft' },
+];
 
 export default function ShopOnboardingRefactored() {
   const [formData, setFormData] = useState({
@@ -28,19 +28,19 @@ export default function ShopOnboardingRefactored() {
     website: '',
     address: '',
     postalCode: '',
-    city: ''
-  })
+    city: '',
+  });
 
   const handleChange = (field: string) => (value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <div className="space-y-6">
       <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">
         Grundinformationen
       </h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormInput
           label="Werkstatt Name"
@@ -49,7 +49,7 @@ export default function ShopOnboardingRefactored() {
           placeholder="z.B. Revamp-IT"
           required
         />
-        
+
         <FormInput
           label="Ansprechperson"
           value={formData.contactPerson}
@@ -57,7 +57,7 @@ export default function ShopOnboardingRefactored() {
           placeholder="Ihr Name"
           required
         />
-        
+
         <FormSelect
           label="Rechtsform"
           value={formData.legalForm}
@@ -67,7 +67,7 @@ export default function ShopOnboardingRefactored() {
           icon={<InformationCircleIcon className="h-4 w-4 text-gray-400" />}
           helpText="Die häufigsten Formen sind Einzelunternehmen (für Einzelpersonen) und GmbH (für Gesellschaften)"
         />
-        
+
         <FormInput
           label="Telefon"
           value={formData.phone}
@@ -76,7 +76,7 @@ export default function ShopOnboardingRefactored() {
           placeholder="+41 44 123 45 67"
           required
         />
-        
+
         <FormInput
           label="E-Mail"
           value={formData.email}
@@ -85,7 +85,7 @@ export default function ShopOnboardingRefactored() {
           placeholder="info@ihre-werkstatt.ch"
           required
         />
-        
+
         <FormInput
           label="Website"
           value={formData.website}
@@ -95,5 +95,5 @@ export default function ShopOnboardingRefactored() {
         />
       </div>
     </div>
-  )
-} 
+  );
+}

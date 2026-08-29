@@ -1,5 +1,5 @@
-import { Smartphone, Shirt, Footprints, Wrench, type LucideIcon } from 'lucide-react'
-import { SHOP_CATEGORIES, type ShopCategory } from './categories'
+import { Smartphone, Shirt, Footprints, Wrench, type LucideIcon } from 'lucide-react';
+import { SHOP_CATEGORIES, type ShopCategory } from './categories';
 
 /**
  * SSOT for the line-icon representing each repair category.
@@ -13,4 +13,4 @@ export const CATEGORY_ICONS: Record<ShopCategory, LucideIcon> = {
   [SHOP_CATEGORIES.ELECTRONICS]: Smartphone,
   [SHOP_CATEGORIES.CLOTHING]: Shirt,
   [SHOP_CATEGORIES.SHOES]: Footprints,
-}
+};

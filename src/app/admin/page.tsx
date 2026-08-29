@@ -1,101 +1,101 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
-import AdminAuthGuard from '@/components/admin/auth-guard'
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import AdminAuthGuard from '@/components/admin/auth-guard';
 
 // Disable static generation for this page
-export const dynamic = 'force-dynamic'
-import { 
-  UsersIcon, 
-  ShoppingBagIcon, 
-  GiftIcon, 
+export const dynamic = 'force-dynamic';
+import {
+  UsersIcon,
+  ShoppingBagIcon,
+  GiftIcon,
   CurrencyDollarIcon,
   ChartBarIcon,
-  PlusIcon
-} from '@heroicons/react/24/outline'
+  PlusIcon,
+} from '@heroicons/react/24/outline';
 
 interface AdminStats {
-  totalUsers: number
-  totalShops: number
-  totalBonusCodes: number
-  activeBonusCodes: number
-  totalBonusValue: number
-  usedBonusValue: number
+  totalUsers: number;
+  totalShops: number;
+  totalBonusCodes: number;
+  activeBonusCodes: number;
+  totalBonusValue: number;
+  usedBonusValue: number;
 }
 
 interface RecentActivity {
-  id: string
-  type: 'USER_REGISTERED' | 'SHOP_ADDED' | 'BONUS_CODE_GENERATED' | 'BONUS_CODE_USED'
-  description: string
-  timestamp: string
+  id: string;
+  type: 'USER_REGISTERED' | 'SHOP_ADDED' | 'BONUS_CODE_GENERATED' | 'BONUS_CODE_USED';
+  description: string;
+  timestamp: string;
 }
 
 export default function AdminDashboard() {
   // Add error handling for session provider
-  let session = null
+  let session = null;
   try {
-    const sessionData = useSession()
-    session = sessionData.data
+    const sessionData = useSession();
+    session = sessionData.data;
   } catch {
-    console.log('Session provider not available in admin')
+    console.log('Session provider not available in admin');
   }
-  const [stats, setStats] = useState<AdminStats | null>(null)
-  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([])
-  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAdminData()
-  }, [])
+    fetchAdminData();
+  }, []);
 
   const fetchAdminData = async () => {
     try {
       const [statsResponse, activityResponse] = await Promise.all([
         fetch('/api/admin/stats'),
-        fetch('/api/admin/activity')
-      ])
+        fetch('/api/admin/activity'),
+      ]);
 
       if (statsResponse.ok) {
-        const statsData = await statsResponse.json()
-        setStats(statsData)
+        const statsData = await statsResponse.json();
+        setStats(statsData);
       }
 
       if (activityResponse.ok) {
-        const activityData = await activityResponse.json()
-        setRecentActivity(activityData)
+        const activityData = await activityResponse.json();
+        setRecentActivity(activityData);
       }
     } catch (error) {
-      console.error('Error fetching admin data:', error)
+      console.error('Error fetching admin data:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('de-CH', {
       style: 'currency',
-      currency: 'CHF'
-    }).format(amount)
-  }
+      currency: 'CHF',
+    }).format(amount);
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('de-CH')
-  }
+    return new Date(dateString).toLocaleString('de-CH');
+  };
 
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'USER_REGISTERED':
-        return <UsersIcon className="h-5 w-5 text-blue-500" />
+        return <UsersIcon className="h-5 w-5 text-blue-500" />;
       case 'SHOP_ADDED':
-        return <ShoppingBagIcon className="h-5 w-5 text-green-500" />
+        return <ShoppingBagIcon className="h-5 w-5 text-green-500" />;
       case 'BONUS_CODE_GENERATED':
-        return <GiftIcon className="h-5 w-5 text-yellow-500" />
+        return <GiftIcon className="h-5 w-5 text-yellow-500" />;
       case 'BONUS_CODE_USED':
-        return <CurrencyDollarIcon className="h-5 w-5 text-purple-500" />
+        return <CurrencyDollarIcon className="h-5 w-5 text-purple-500" />;
       default:
-        return <ChartBarIcon className="h-5 w-5 text-gray-500" />
+        return <ChartBarIcon className="h-5 w-5 text-gray-500" />;
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
           </div>
         </div>
       </AdminAuthGuard>
-    )
+    );
   }
 
   return (
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Admin-Dashboard</h1>
                 <p className="mt-1 text-gray-600">
-                  Willkommen zurück, {session?.user?.name}! 
+                  Willkommen zurück, {session?.user?.name}!
                   <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
                     {(session?.user as { role?: string })?.role}
                   </span>
@@ -231,25 +231,28 @@ export default function AdminDashboard() {
                   <h3 className="text-lg leading-6 font-medium text-gray-900 mb-6">
                     Letzte Aktivitäten
                   </h3>
-                  
+
                   {recentActivity.length === 0 ? (
                     <div className="text-center py-6">
                       <ChartBarIcon className="mx-auto h-12 w-12 text-gray-400" />
-                      <h3 className="mt-2 text-sm font-medium text-gray-900">Keine aktuellen Aktivitäten</h3>
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">
+                        Keine aktuellen Aktivitäten
+                      </h3>
                       <p className="mt-1 text-sm text-gray-500">
-                        Aktivitäten werden hier angezeigt, sobald Benutzer mit der Plattform interagieren.
+                        Aktivitäten werden hier angezeigt, sobald Benutzer mit der Plattform
+                        interagieren.
                       </p>
                     </div>
                   ) : (
                     <div className="space-y-4">
                       {recentActivity.map((activity) => (
                         <div key={activity.id} className="flex items-start space-x-3">
-                          <div className="flex-shrink-0">
-                            {getActivityIcon(activity.type)}
-                          </div>
+                          <div className="flex-shrink-0">{getActivityIcon(activity.type)}</div>
                           <div className="min-w-0 flex-1">
                             <p className="text-sm text-gray-900">{activity.description}</p>
-                            <p className="text-xs text-gray-500">{formatDate(activity.timestamp)}</p>
+                            <p className="text-xs text-gray-500">
+                              {formatDate(activity.timestamp)}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -266,7 +269,7 @@ export default function AdminDashboard() {
                   <h3 className="text-lg leading-6 font-medium text-gray-900 mb-6">
                     Schnellaktionen
                   </h3>
-                  
+
                   <div className="space-y-3">
                     <button className="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-left">
                       Benutzer verwalten
@@ -287,10 +290,8 @@ export default function AdminDashboard() {
               {/* System Status */}
               <div className="bg-white shadow-sm rounded-lg mt-6">
                 <div className="px-4 py-5 sm:p-6">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 mb-6">
-                    Systemstatus
-                  </h3>
-                  
+                  <h3 className="text-lg leading-6 font-medium text-gray-900 mb-6">Systemstatus</h3>
+
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Datenbank</span>
@@ -318,5 +319,5 @@ export default function AdminDashboard() {
         </div>
       </div>
     </AdminAuthGuard>
-  )
+  );
 }

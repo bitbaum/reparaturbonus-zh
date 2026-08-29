@@ -1,8 +1,8 @@
-import { NextAuthOptions } from 'next-auth'
-import CredentialsProvider from 'next-auth/providers/credentials'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import bcrypt from 'bcryptjs'
-import { prisma } from './db'
+import { NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import bcrypt from 'bcryptjs';
+import { prisma } from './db';
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -11,30 +11,27 @@ export const authOptions: NextAuthOptions = {
       name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null
+          return null;
         }
 
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials.email
-          }
-        })
+            email: credentials.email,
+          },
+        });
 
         if (!user) {
-          return null
+          return null;
         }
 
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        )
+        const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
         if (!isPasswordValid) {
-          return null
+          return null;
         }
 
         return {
@@ -42,9 +39,9 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           role: user.role,
-        }
-      }
-    })
+        };
+      },
+    }),
   ],
   session: {
     strategy: 'jwt',
@@ -52,19 +49,19 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) {
-        token.role = (user as { role?: string }).role
+        token.role = (user as { role?: string }).role;
       }
-      return token
+      return token;
     },
     session: async ({ session, token }) => {
       if (session?.user && token?.role) {
-        (session.user as { id?: string; role?: string }).id = token.sub
-        ;(session.user as { role?: string }).role = token.role as string
+        (session.user as { id?: string; role?: string }).id = token.sub;
+        (session.user as { role?: string }).role = token.role as string;
       }
-      return session
+      return session;
     },
   },
   pages: {
     signIn: '/auth/signin',
   },
-}
+};

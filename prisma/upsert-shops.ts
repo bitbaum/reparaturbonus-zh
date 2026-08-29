@@ -1,6 +1,6 @@
-import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '../src/generated/prisma/client'
-import { REVAMPIT_SHOP, type SeedShop } from './data/shops'
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../src/generated/prisma/client';
+import { REVAMPIT_SHOP, type SeedShop } from './data/shops';
 
 /**
  * Production-safe shop upsert. Unlike `seed.ts`, this NEVER deletes — it only
@@ -12,40 +12,40 @@ import { REVAMPIT_SHOP, type SeedShop } from './data/shops'
  * Shop has no natural unique key, so we match on (name, postalCode).
  */
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
-const prisma = new PrismaClient({ adapter })
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 // Only verified, real shops belong here — never demo placeholders.
-const SHOPS: SeedShop[] = [REVAMPIT_SHOP]
+const SHOPS: SeedShop[] = [REVAMPIT_SHOP];
 
 async function upsertShop(shop: SeedShop) {
   const existing = await prisma.shop.findFirst({
     where: { name: shop.name, postalCode: shop.postalCode },
     select: { id: true },
-  })
+  });
 
   if (existing) {
-    await prisma.shop.update({ where: { id: existing.id }, data: shop })
-    console.log(`↻ Updated shop: ${shop.name} (${shop.postalCode})`)
+    await prisma.shop.update({ where: { id: existing.id }, data: shop });
+    console.log(`↻ Updated shop: ${shop.name} (${shop.postalCode})`);
   } else {
-    await prisma.shop.create({ data: shop })
-    console.log(`✓ Created shop: ${shop.name} (${shop.postalCode})`)
+    await prisma.shop.create({ data: shop });
+    console.log(`✓ Created shop: ${shop.name} (${shop.postalCode})`);
   }
 }
 
 async function main() {
-  console.log('🛠  Upserting real shops (non-destructive)...')
+  console.log('🛠  Upserting real shops (non-destructive)...');
   for (const shop of SHOPS) {
-    await upsertShop(shop)
+    await upsertShop(shop);
   }
-  console.log(`🎉 Done — ${SHOPS.length} shop(s) upserted.`)
+  console.log(`🎉 Done — ${SHOPS.length} shop(s) upserted.`);
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error upserting shops:', e)
-    process.exit(1)
+    console.error('❌ Error upserting shops:', e);
+    process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect()
-  })
+    await prisma.$disconnect();
+  });

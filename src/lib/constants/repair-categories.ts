@@ -1,13 +1,13 @@
-import { SHOP_CATEGORIES, CATEGORY_LABELS, type ShopCategory } from './categories'
-import { CATEGORY_ICONS } from './category-icons'
-import type { LucideIcon } from 'lucide-react'
+import { SHOP_CATEGORIES, CATEGORY_LABELS, type ShopCategory } from './categories';
+import { CATEGORY_ICONS } from './category-icons';
+import type { LucideIcon } from 'lucide-react';
 
 export interface RepairCategory {
-  id: ShopCategory
-  label: string
-  icon: LucideIcon
+  id: ShopCategory;
+  label: string;
+  icon: LucideIcon;
   /** Plain-language examples shown to residents on the landing wizard. */
-  examples: string[]
+  examples: string[];
 }
 
 /**
@@ -34,7 +34,7 @@ export const REPAIR_CATEGORIES: RepairCategory[] = [
     icon: CATEGORY_ICONS[SHOP_CATEGORIES.SHOES],
     examples: ['Sneaker', 'Stiefel', 'Sandalen', 'Absätze'],
   },
-]
+];
 
 export const findRepairCategory = (id: string): RepairCategory | undefined =>
-  REPAIR_CATEGORIES.find((category) => category.id === id)
+  REPAIR_CATEGORIES.find((category) => category.id === id);
