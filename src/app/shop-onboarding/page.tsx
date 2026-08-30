@@ -99,9 +99,10 @@ const legalFormOptions = [
 ];
 
 // Define mandatory fields for each step - DRY principle
+// Must match the required-field check in src/app/api/shop-onboarding/route.ts
 const MANDATORY_FIELDS = {
-  1: ['name', 'category'],
-  2: ['email', 'address', 'postalCode', 'city'],
+  1: ['name', 'category', 'description', 'contactPerson'],
+  2: ['email', 'address', 'postalCode', 'city', 'phone'],
   3: [], // No mandatory fields for specializations
   4: [], // Confirmation step
 } as const;
@@ -414,6 +415,7 @@ export default function ShopOnboarding() {
                   value={formData.description}
                   onChange={(value) => handleInputChange('description', value)}
                   placeholder="Beschreiben Sie Ihre Werkstatt und Ihre Spezialisierung..."
+                  required
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -422,6 +424,7 @@ export default function ShopOnboarding() {
                     value={formData.contactPerson}
                     onChange={(value) => handleInputChange('contactPerson', value)}
                     placeholder="Ihr Name"
+                    required
                   />
 
                   <FormSelect
@@ -451,6 +454,7 @@ export default function ShopOnboarding() {
                   type="tel"
                   placeholder="+41 44 123 45 67"
                   icon={<PhoneIcon className="h-4 w-4" />}
+                  required
                 />
 
                 <FormInput
@@ -674,6 +678,21 @@ export default function ShopOnboarding() {
                   </div>
                 </div>
               </div>
+
+              {submitStatus === 'error' && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex">
+                    <ExclamationTriangleIcon className="h-5 w-5 text-red-400 mr-2 mt-0.5" />
+                    <div>
+                      <h3 className="font-medium text-red-800">Anmeldung fehlgeschlagen</h3>
+                      <p className="text-sm text-red-700 mt-1">
+                        Beim Einreichen Ihres Antrags ist ein Fehler aufgetreten. Bitte überprüfen
+                        Sie Ihre Angaben und versuchen Sie es erneut.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
