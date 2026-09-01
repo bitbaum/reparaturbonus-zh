@@ -7,7 +7,7 @@
 ## Context
 
 - **Project**: Reparaturbonus Zürich - Repair shop bonus platform
-- **Tech Stack**: Next.js 15, PostgreSQL, Prisma, NextAuth.js, Tailwind
+- **Tech Stack**: Next.js, PostgreSQL, Drizzle ORM, NextAuth.js, Tailwind
 - **Key Docs**: See `AGENTS.md`
 
 ## Task Requirements
@@ -24,7 +24,7 @@
 
 ## Constraints
 
-- Use Prisma for all database operations
+- Use Drizzle for all database operations
 - Follow NextAuth.js patterns for auth
 - Keep German language content
 

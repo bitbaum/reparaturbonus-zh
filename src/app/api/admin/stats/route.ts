@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/db';
+import { and, eq, gt, sum } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { bonusCodes, shops, users } from '@/lib/db/schema';
 import { authOptions } from '@/lib/auth';
 
 export async function GET() {
@@ -21,33 +23,21 @@ export async function GET() {
       totalShops,
       totalBonusCodes,
       activeBonusCodes,
-      totalBonusValue,
-      usedBonusValue,
+      [totalBonusValue],
+      [usedBonusValue],
     ] = await Promise.all([
-      prisma.user.count(),
-      prisma.shop.count(),
-      prisma.bonusCode.count(),
-      prisma.bonusCode.count({
-        where: {
-          isUsed: false,
-          expiresAt: {
-            gt: new Date(),
-          },
-        },
-      }),
-      prisma.bonusCode.aggregate({
-        _sum: {
-          amount: true,
-        },
-      }),
-      prisma.bonusCode.aggregate({
-        _sum: {
-          amount: true,
-        },
-        where: {
-          isUsed: true,
-        },
-      }),
+      db.$count(users),
+      db.$count(shops),
+      db.$count(bonusCodes),
+      db.$count(
+        bonusCodes,
+        and(eq(bonusCodes.isUsed, false), gt(bonusCodes.expiresAt, new Date())),
+      ),
+      db.select({ sum: sum(bonusCodes.amount) }).from(bonusCodes),
+      db
+        .select({ sum: sum(bonusCodes.amount) })
+        .from(bonusCodes)
+        .where(eq(bonusCodes.isUsed, true)),
     ]);
 
     const stats = {
@@ -55,8 +45,8 @@ export async function GET() {
       totalShops,
       totalBonusCodes,
       activeBonusCodes,
-      totalBonusValue: totalBonusValue._sum.amount || 0,
-      usedBonusValue: usedBonusValue._sum.amount || 0,
+      totalBonusValue: Number(totalBonusValue.sum) || 0,
+      usedBonusValue: Number(usedBonusValue.sum) || 0,
     };
 
     return NextResponse.json(stats);

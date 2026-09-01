@@ -1,22 +1,21 @@
-import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../src/generated/prisma/client';
+import { bonusCodes, orders, shops } from '../../src/lib/db/schema';
+import { createScriptDb } from './client';
 import { SEED_SHOPS } from './data/shops';
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const { db, pool } = createScriptDb();
 
 async function main() {
   console.log('🌱 Seeding database...');
 
   // Clear existing data (handle foreign key constraints)
-  await prisma.order.deleteMany();
-  await prisma.bonusCode.deleteMany();
-  await prisma.shop.deleteMany();
+  await db.delete(orders);
+  await db.delete(bonusCodes);
+  await db.delete(shops);
 
   console.log('Creating repair shops...');
 
   for (const shop of SEED_SHOPS) {
-    await prisma.shop.create({ data: shop });
+    await db.insert(shops).values(shop);
     console.log(`✓ Created shop: ${shop.name}`);
   }
 
@@ -29,5 +28,5 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await pool.end();
   });

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
-import { prisma } from '@/lib/db';
+import { eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { shops } from '@/lib/db/schema';
 import { getShop } from '@/lib/demo/shopData';
 import { categoryLabel } from '@/lib/constants/categories';
 import { OG_IMAGE, SITE_NAME } from '@/lib/constants/site';
@@ -18,9 +20,9 @@ type ShopSummary = { name: string; description: string | null; city: string; cat
  */
 async function findShop(id: string): Promise<ShopSummary | null> {
   try {
-    const shop = await prisma.shop.findUnique({
-      where: { id },
-      select: { name: true, description: true, city: true, category: true },
+    const shop = await db.query.shops.findFirst({
+      where: eq(shops.id, id),
+      columns: { name: true, description: true, city: true, category: true },
     });
 
     if (shop) return shop;

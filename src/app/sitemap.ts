@@ -1,5 +1,7 @@
 import type { MetadataRoute } from 'next';
-import { prisma } from '@/lib/db';
+import { asc, eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { shops } from '@/lib/db/schema';
 import { absoluteUrl } from '@/lib/constants/site';
 import { PUBLIC_PAGES } from '@/lib/constants/page-metadata';
 import { shopPath } from '@/lib/constants/routes';
@@ -26,10 +28,10 @@ type ShopEntry = { id: string; updatedAt: Date };
  */
 async function listShops(): Promise<ShopEntry[]> {
   try {
-    return await prisma.shop.findMany({
-      where: { isActive: true },
-      select: { id: true, updatedAt: true },
-      orderBy: { name: 'asc' },
+    return await db.query.shops.findMany({
+      where: eq(shops.isActive, true),
+      columns: { id: true, updatedAt: true },
+      orderBy: asc(shops.name),
     });
   } catch (error) {
     console.warn('sitemap: database unavailable, emitting static pages only:', error);

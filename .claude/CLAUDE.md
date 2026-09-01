@@ -6,7 +6,7 @@
 
 ## Overview
 
-Reparaturbonus Zürich is a **Next.js 15** application connecting customers with certified repair shops and providing bonus codes for sustainable repair choices. Built with Prisma and PostgreSQL.
+Reparaturbonus Zürich is a **Next.js** application connecting customers with certified repair shops and providing bonus codes for sustainable repair choices. Built with Drizzle ORM and PostgreSQL.
 
 ## Architecture
 
@@ -20,9 +20,9 @@ reparaturbonus-zh/
 │   │   └── dashboard/    # Customer dashboard
 │   ├── components/       # React components
 │   └── lib/              # Utilities
-├── prisma/
-│   ├── schema.prisma     # Database schema
-│   └── seed.ts           # Seed data
+│       └── db/           # Drizzle client + schema (SSOT for types)
+├── drizzle/              # Generated SQL migrations
+├── scripts/db/           # Seed + prod-safe shop upsert
 └── package.json
 ```
 
@@ -31,7 +31,7 @@ reparaturbonus-zh/
 | Layer | Technology |
 |-------|------------|
 | Framework | Next.js 15 (App Router, Turbopack) |
-| Database | PostgreSQL with Prisma ORM |
+| Database | PostgreSQL with Drizzle ORM |
 | Auth | NextAuth.js (credentials provider) |
 | Styling | Tailwind CSS |
 | Language | TypeScript |
@@ -43,7 +43,7 @@ reparaturbonus-zh/
 npm install
 
 # Setup database
-npm run setup  # Generates Prisma client, pushes schema, seeds data
+npm run setup  # Applies Drizzle migrations + seeds data
 
 # Start development
 npm run dev    # Uses Turbopack
@@ -60,17 +60,19 @@ npm run dev    # Uses Turbopack
 
 ### 1. Database Operations
 
-Always use Prisma:
+Always use Drizzle via the single client in `@/lib/db`:
 ```typescript
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/db';
+import { shops, bonusCodes } from '@/lib/db/schema';
 
 // Query
-const shops = await prisma.shop.findMany();
+const allShops = await db.query.shops.findMany();
 
 // Create
-const code = await prisma.bonusCode.create({
-  data: { code: generateCode(), amount: 50 }
-});
+const [code] = await db
+  .insert(bonusCodes)
+  .values({ code: generateCode(), amount: 50, expiresAt, userId })
+  .returning();
 ```
 
 ### 2. Authentication
@@ -115,18 +117,18 @@ NEXTAUTH_SECRET="your-secure-random-string"
 ## Don't
 
 - Expose user passwords or sensitive data
-- Skip Prisma migrations for schema changes
+- Skip Drizzle migrations for schema changes (`npm run db:generate` after editing `src/lib/db/schema.ts`)
 - Hardcode bonus amounts (use constants)
 - Commit .env files
 
 ## Database Commands
 
 ```bash
-npm run db:generate   # Generate Prisma client
-npm run db:push       # Push schema to database
+npm run db:generate   # Generate SQL migration from schema changes
+npm run db:push       # Push schema to database (dev shortcut)
 npm run db:migrate    # Run migrations
 npm run db:seed       # Seed with sample data
-npm run db:studio     # Open Prisma Studio
+npm run db:studio     # Open Drizzle Studio
 ```
 
 ---

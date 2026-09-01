@@ -54,7 +54,8 @@ Customer  -->  Admin  -->  Super Admin
 
 ### Database Schema
 
-Prisma as SSOT -- 8 models, types derived from schema:
+Drizzle schema as SSOT (`src/lib/db/schema.ts`) -- types derived from schema
+(migrated from Prisma 2026-09, keeping the exact table shapes):
 
 ```
 User ──── has many ──> BonusCode
@@ -77,7 +78,7 @@ Three enums enforce domain constraints at the database level:
 |-------|------------|
 | Framework | Next.js 15 (App Router, Turbopack) |
 | Language | TypeScript 5 (strict mode) |
-| Database | PostgreSQL + Prisma 6 |
+| Database | PostgreSQL + Drizzle ORM |
 | Auth | NextAuth.js, JWT, bcryptjs |
 | Styling | Tailwind CSS 4 |
 | Deployment | Self-hosted (Hetzner, Caddy, Next.js standalone) |
@@ -99,7 +100,7 @@ git clone https://github.com/bitbaum/reparaturbonus-zh.git
 cd reparaturbonus-zh
 cp .env.example .env.local    # configure DATABASE_URL, NEXTAUTH_SECRET
 npm install
-npm run setup                  # generate Prisma client + push schema + seed
+npm run setup                  # apply Drizzle migrations + seed
 npm run dev
 ```
 
@@ -133,12 +134,11 @@ src/
   lib/
     auth.ts           # NextAuth config + JWT strategy
     bonus-codes.ts    # Code generation, validation, expiry
-    db.ts             # Prisma singleton
+    db/               # Drizzle client (lazy singleton) + schema (SSOT for types)
     constants/        # Routes + categories (SSOT)
     demo/             # Mock data for graceful fallback
-prisma/
-  schema.prisma       # 8 models, 3 enums (SSOT for types)
-  seed.ts             # Sample repair shops
+drizzle/              # Generated SQL migrations
+scripts/db/           # Seed + prod-safe shop upsert
 ```
 
 ---

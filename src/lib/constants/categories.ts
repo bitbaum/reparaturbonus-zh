@@ -15,7 +15,7 @@ export const CATEGORY_LABELS: Record<ShopCategory, string> = {
 };
 
 /**
- * Label for a category value that arrives as a plain string (a Prisma enum
+ * Label for a category value that arrives as a plain string (a database enum
  * value, a URL segment), falling back for anything unrecognised so a display
  * path can never render `undefined`.
  */

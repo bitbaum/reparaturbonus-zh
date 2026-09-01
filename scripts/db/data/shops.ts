@@ -1,4 +1,4 @@
-import { ShopCategory } from '../../src/generated/prisma/client';
+import type { ShopCategory } from '../../../src/lib/db/schema';
 
 /**
  * Shop seed data — SSOT for both `seed.ts` (full dev reseed) and
@@ -34,7 +34,7 @@ export const REVAMPIT_SHOP: SeedShop = {
   phone: '+41 43 960 32 64',
   email: 'empfang@revamp-it.ch',
   website: 'https://revamp-it.ch',
-  category: ShopCategory.ELECTRONICS,
+  category: 'ELECTRONICS',
   latitude: 47.3815,
   longitude: 8.5237,
   isActive: true,
@@ -52,7 +52,7 @@ export const DEMO_SHOPS: SeedShop[] = [
     phone: '+41 44 987 65 43',
     email: 'meister@schuh-reparatur.ch',
     website: null,
-    category: ShopCategory.SHOES,
+    category: 'SHOES',
     latitude: 47.3782,
     longitude: 8.5297,
     isActive: true,
@@ -67,7 +67,7 @@ export const DEMO_SHOPS: SeedShop[] = [
     phone: '+41 44 456 78 90',
     email: 'kontakt@naeh-atelier.ch',
     website: 'https://naeh-atelier-zuerich.ch',
-    category: ShopCategory.CLOTHING,
+    category: 'CLOTHING',
     latitude: 47.3708,
     longitude: 8.5426,
     isActive: true,
@@ -82,7 +82,7 @@ export const DEMO_SHOPS: SeedShop[] = [
     phone: '+41 44 567 89 01',
     email: 'service@elektro-service-zh.ch',
     website: 'https://elektro-service-zuerich.ch',
-    category: ShopCategory.ELECTRONICS,
+    category: 'ELECTRONICS',
     latitude: 47.3889,
     longitude: 8.5169,
     isActive: true,

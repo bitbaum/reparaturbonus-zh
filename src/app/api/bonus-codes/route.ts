@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/db';
+import { desc, eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { bonusCodes, orders, shops } from '@/lib/db/schema';
 import { authOptions } from '@/lib/auth';
 import { generateBonusCode, calculateBonusAmount, getBonusExpiryDate } from '@/lib/bonus-codes';
 
@@ -12,30 +14,16 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const bonusCodes = await prisma.bonusCode.findMany({
-      where: {
-        userId: (session.user as { id?: string }).id!,
+    const codes = await db.query.bonusCodes.findMany({
+      where: eq(bonusCodes.userId, (session.user as { id?: string }).id!),
+      with: {
+        shop: { columns: { name: true } },
+        order: { columns: { id: true, total: true, status: true } },
       },
-      include: {
-        shop: {
-          select: {
-            name: true,
-          },
-        },
-        order: {
-          select: {
-            id: true,
-            total: true,
-            status: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: desc(bonusCodes.createdAt),
     });
 
-    return NextResponse.json(bonusCodes);
+    return NextResponse.json(codes);
   } catch (error) {
     console.error('Error fetching bonus codes:', error);
     return NextResponse.json({ error: 'Failed to fetch bonus codes' }, { status: 500 });
@@ -58,8 +46,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify shop exists
-    const shop = await prisma.shop.findUnique({
-      where: { id: shopId },
+    const shop = await db.query.shops.findFirst({
+      where: eq(shops.id, shopId),
     });
 
     if (!shop) {
@@ -72,8 +60,8 @@ export async function POST(request: NextRequest) {
     const maxAttempts = 10;
 
     while (attempts < maxAttempts) {
-      const existingCode = await prisma.bonusCode.findUnique({
-        where: { code: bonusCode },
+      const existingCode = await db.query.bonusCodes.findFirst({
+        where: eq(bonusCodes.code, bonusCode),
       });
 
       if (!existingCode) {
@@ -94,44 +82,41 @@ export async function POST(request: NextRequest) {
     // Create order if not provided
     let orderRecord = null;
     if (orderId) {
-      orderRecord = await prisma.order.findUnique({
-        where: { id: orderId },
-      });
+      orderRecord =
+        (await db.query.orders.findFirst({
+          where: eq(orders.id, orderId),
+        })) ?? null;
     } else {
-      orderRecord = await prisma.order.create({
-        data: {
+      [orderRecord] = await db
+        .insert(orders)
+        .values({
           total: repairCost,
           description: description || 'Repair service',
           userId: (session.user as { id?: string }).id!,
           shopId: shopId,
           status: 'COMPLETED',
-        },
-      });
+        })
+        .returning();
     }
 
     // Create bonus code
-    const newBonusCode = await prisma.bonusCode.create({
-      data: {
+    const [inserted] = await db
+      .insert(bonusCodes)
+      .values({
         code: bonusCode,
         amount: bonusAmount,
         expiresAt: expiryDate,
         userId: (session.user as { id?: string }).id!,
         shopId: shopId,
         orderId: orderRecord?.id,
-      },
-      include: {
-        shop: {
-          select: {
-            name: true,
-          },
-        },
-        order: {
-          select: {
-            id: true,
-            total: true,
-            status: true,
-          },
-        },
+      })
+      .returning({ id: bonusCodes.id });
+
+    const newBonusCode = await db.query.bonusCodes.findFirst({
+      where: eq(bonusCodes.id, inserted.id),
+      with: {
+        shop: { columns: { name: true } },
+        order: { columns: { id: true, total: true, status: true } },
       },
     });
 
