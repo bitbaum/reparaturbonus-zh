@@ -8,6 +8,11 @@ const eslintConfig = [
   ...nextCoreWebVitals,
   ...nextTypeScript,
   {
+    // eslint-config-next ships eslint-plugin-react with version 'detect',
+    // which calls context.getFilename — removed in ESLint 10 — and crashes
+    // the run. Pinning skips detection. After the next configs so their
+    // 'detect' cannot win (order matters — fleet-proven).
+    settings: { react: { version: '19' } },
     // eslint-plugin-react-hooks v6 (bundled with Next 16's eslint-config-next)
     // adds React-Compiler-era rules absent from the Next 15 config. Adopting
     // them across this codebase is a dedicated refactor, out of scope for a
