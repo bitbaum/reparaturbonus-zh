@@ -8,32 +8,23 @@ import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import SessionProviderWrapper from '@/components/providers/session-provider';
+import { SITE_NAME, SITE_URL } from '@/lib/constants/site';
+import { ROUTES } from '@/lib/constants/routes';
+import { getPublicPage } from '@/lib/constants/page-metadata';
+import { pageMetadata } from '@/lib/metadata';
 // import RepairChat from "@/components/ui/AiChat";
 
 const geistSans = GeistSans;
 const geistMono = GeistMono;
 
-/**
- * Where this site actually serves. Load-bearing for the social preview: Next
- * resolves the generated og:image against `metadataBase`, and without it the
- * tag is emitted as http://localhost:3000/opengraph-image — present, plausible,
- * and unfetchable by every scraper. Falls back to the real host, not localhost.
- */
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://reparaturbonus.orangecat.ch';
-
 export const metadata: Metadata = {
+  ...pageMetadata(ROUTES.HOME),
   metadataBase: new URL(SITE_URL),
-  title: 'Reparaturbonus Zürich - Reparieren statt wegwerfen',
-  description:
-    'Finden Sie die beste Werkstatt in Zürich und nutzen Sie CHF 100 Reparaturbonus der Stadt. Nachhaltig, günstig und umweltfreundlich.',
-  openGraph: {
-    title: 'Reparaturbonus Zürich — Reparieren statt wegwerfen',
-    description:
-      'Die beste Werkstatt in Zürich finden und CHF 100 Reparaturbonus der Stadt nutzen.',
-    url: SITE_URL,
-    siteName: 'Reparaturbonus Zürich',
-    type: 'website',
-    locale: 'de_CH',
+  // Default names the home page; every segment layout supplies only its own
+  // half of the title and this template appends the site name.
+  title: {
+    default: `${SITE_NAME} — ${getPublicPage(ROUTES.HOME).title}`,
+    template: `%s | ${SITE_NAME}`,
   },
   icons: {
     icon: [

@@ -19,3 +19,10 @@ yarn.lock
 # is where it is most opinionated and least useful, and it would bury the real
 # diff. Remove this line when you want docs formatted too.
 *.md
+
+# Agent session scratch, not product source. `.claude/worktrees` holds nested
+# git checkouts of other branches — formatting a whole second copy of the repo
+# made `npm run verify` fail locally while CI (which never has them) stayed
+# green, which breaks the one rule that verify has to keep.
+.claude/worktrees
+.claude/settings.local.json
