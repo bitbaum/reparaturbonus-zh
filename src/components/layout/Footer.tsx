@@ -48,6 +48,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href={ROUTES.WHY_REPAIR}
+                  className="text-on-brand/80 hover:text-on-brand transition-colors duration-200"
+                >
+                  Warum reparieren?
+                </Link>
+              </li>
+              <li>
+                <Link
                   href={ROUTES.DASHBOARD}
                   className="text-on-brand/80 hover:text-on-brand transition-colors duration-200"
                 >

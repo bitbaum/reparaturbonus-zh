@@ -13,3 +13,11 @@ export const CATEGORY_LABELS: Record<ShopCategory, string> = {
   [SHOP_CATEGORIES.CLOTHING]: 'Kleidung',
   [SHOP_CATEGORIES.SHOES]: 'Schuhe',
 };
+
+/**
+ * Label for a category value that arrives as a plain string (a Prisma enum
+ * value, a URL segment), falling back for anything unrecognised so a display
+ * path can never render `undefined`.
+ */
+export const categoryLabel = (category: string): string =>
+  (CATEGORY_LABELS as Record<string, string | undefined>)[category] ?? 'Reparaturen';

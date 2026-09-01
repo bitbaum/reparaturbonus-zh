@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { OG_IMAGE } from '@/lib/constants/site';
 
 /**
  * Social preview card (1200x630 — the 1.91:1 size Slack, Telegram and the
@@ -11,8 +12,8 @@ import { ImageResponse } from 'next/og';
  */
 
 export const runtime = 'edge';
-export const alt = 'Reparaturbonus Zürich — Reparieren statt wegwerfen';
-export const size = { width: 1200, height: 630 };
+export const alt = OG_IMAGE.alt;
+export const size = { width: OG_IMAGE.width, height: OG_IMAGE.height };
 export const contentType = 'image/png';
 
 const BLUE = '#1B4A8F';
