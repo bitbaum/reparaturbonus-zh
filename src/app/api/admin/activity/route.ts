@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/db';
+import { and, desc, eq, isNotNull } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { bonusCodes, shops, users } from '@/lib/db/schema';
 import { authOptions } from '@/lib/auth';
 
 export async function GET() {
@@ -18,68 +20,28 @@ export async function GET() {
 
     // Get recent activity from different sources
     const [recentUsers, recentShops, recentBonusCodes, recentUsedCodes] = await Promise.all([
-      prisma.user.findMany({
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        take: 5,
+      db.query.users.findMany({
+        columns: { id: true, name: true, email: true, createdAt: true },
+        orderBy: desc(users.createdAt),
+        limit: 5,
       }),
-      prisma.shop.findMany({
-        select: {
-          id: true,
-          name: true,
-          createdAt: true,
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        take: 5,
+      db.query.shops.findMany({
+        columns: { id: true, name: true, createdAt: true },
+        orderBy: desc(shops.createdAt),
+        limit: 5,
       }),
-      prisma.bonusCode.findMany({
-        select: {
-          id: true,
-          code: true,
-          amount: true,
-          createdAt: true,
-          user: {
-            select: {
-              name: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        take: 5,
+      db.query.bonusCodes.findMany({
+        columns: { id: true, code: true, amount: true, createdAt: true },
+        with: { user: { columns: { name: true } } },
+        orderBy: desc(bonusCodes.createdAt),
+        limit: 5,
       }),
-      prisma.bonusCode.findMany({
-        select: {
-          id: true,
-          code: true,
-          amount: true,
-          usedAt: true,
-          user: {
-            select: {
-              name: true,
-            },
-          },
-        },
-        where: {
-          isUsed: true,
-          usedAt: {
-            not: null,
-          },
-        },
-        orderBy: {
-          usedAt: 'desc',
-        },
-        take: 5,
+      db.query.bonusCodes.findMany({
+        columns: { id: true, code: true, amount: true, usedAt: true },
+        with: { user: { columns: { name: true } } },
+        where: and(eq(bonusCodes.isUsed, true), isNotNull(bonusCodes.usedAt)),
+        orderBy: desc(bonusCodes.usedAt),
+        limit: 5,
       }),
     ]);
 

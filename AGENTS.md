@@ -15,7 +15,7 @@ replace). See `README.md` for the product overview.
 |-------|------------|
 | Framework | Next.js 15 (App Router, Turbopack, `output: "standalone"`) |
 | Language | TypeScript 5 (strict) |
-| Database | PostgreSQL + Prisma 6 |
+| Database | PostgreSQL + Drizzle ORM (`drizzle-orm/node-postgres`, `pg` Pool) |
 | Auth | NextAuth.js (credentials, JWT, bcryptjs) |
 | Styling | Tailwind CSS 4 |
 | Deploy | Self-hosted (Hetzner, Caddy) — `reparaturbonus.orangecat.ch` |
@@ -24,24 +24,29 @@ replace). See `README.md` for the product overview.
 
 ```bash
 npm run dev        # dev server (Turbopack)
-npm run verify     # SSOT gate: lint + typecheck — run before every commit
-npm run build      # prisma generate + next build (hermetic, no live DB needed)
-npm run setup      # db:generate + db:push + db:seed (needs a live DATABASE_URL)
+npm run verify     # SSOT gate: format + lint + typecheck + tests — run before every commit
+npm run build      # next build (hermetic, no live DB needed)
+npm run setup      # db:migrate + db:seed (needs a live DATABASE_URL)
 ```
 
 `npm run verify` is the single source of truth for "is this change OK". CI
-(`.github/workflows/ci.yml`) runs `prisma generate` then `npm run verify`, and
-gates `npm run build` on top. Green verify + build locally ⇒ green CI.
+(`.github/workflows/ci.yml`) runs `npm run verify`, and gates `npm run build`
+on top. Green verify + build locally ⇒ green CI.
 
-## Prisma
+## Drizzle
 
-- Schema (SSOT for models/types): `prisma/schema.prisma` — 8 models, 3 enums.
-- Migrations: `prisma/migrations/` (`prisma migrate dev` to add; never edit
-  applied migrations).
-- Seed / data helpers: `prisma/seed.ts`, `prisma/upsert-shops.ts`,
-  `prisma/data/`.
-- Client is generated via `prisma generate` (no `postinstall` hook) — run it
-  before typecheck/build so generated types exist.
+- Schema (SSOT for models/types): `src/lib/db/schema.ts` — 4 tables, 3 enums,
+  relations, `$inferSelect` type exports. It mirrors the live database exactly
+  (table/column/constraint names from the original Prisma migration) — never
+  "normalize" names.
+- Client: `src/lib/db/index.ts` — lazy `pg` Pool + `drizzle()` singleton, the
+  single DB door. No codegen: types flow from the schema at typecheck time.
+- Migrations: `drizzle/` (`npm run db:generate` after schema edits; never edit
+  applied migrations). Fresh DBs: `npm run db:migrate`. The live box is
+  reconciled on deploy by fleetcrown's `apply-schema.sh` (forward-only,
+  ledgered in `public._deploy_schema_history`, refuses destructive SQL).
+- Seed / data helpers: `scripts/db/seed.ts` (dev reseed, destructive),
+  `scripts/db/upsert-shops.ts` (prod-safe), `scripts/db/data/`.
 
 ## Build hermeticity
 

@@ -1,29 +1,25 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { db } from '@/lib/db';
+import { shops } from '@/lib/db/schema';
 
 export async function GET() {
   try {
     console.log('Test API: Starting...');
     console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
     console.log('NODE_ENV:', process.env.NODE_ENV);
-    const count = await prisma.shop.count();
+    const count = await db.$count(shops);
     console.log('Test API: Shop count:', count);
 
-    const shops = await prisma.shop.findMany({
-      take: 3,
-      select: {
-        id: true,
-        name: true,
-        category: true,
-        isActive: true,
-      },
+    const shopRows = await db.query.shops.findMany({
+      limit: 3,
+      columns: { id: true, name: true, category: true, isActive: true },
     });
-    console.log('Test API: First 3 shops:', shops);
+    console.log('Test API: First 3 shops:', shopRows);
 
     return NextResponse.json({
       success: true,
       count,
-      shops,
+      shops: shopRows,
     });
   } catch (error) {
     console.error('Test API Error:', error);

@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     // Simulate saving the application
     // In production, you would save to a shop_applications table
-    // await prisma.shopApplication.create({
+    // await db.insert(shopApplications).values({
     //   data: {
     //     name,
     //     description,

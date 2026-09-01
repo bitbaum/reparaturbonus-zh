@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { and, asc, eq, ilike, or, type SQL } from 'drizzle-orm';
+import type { PgColumn } from 'drizzle-orm/pg-core';
+import { db } from '@/lib/db';
+import { shops, type ShopCategory } from '@/lib/db/schema';
 
 // Mock data for when database is unavailable
 const mockShops = [
@@ -62,6 +65,15 @@ const mockShops = [
   },
 ];
 
+/**
+ * Case-insensitive substring match — Prisma's `contains` + `mode:
+ * 'insensitive'`. LIKE wildcards in the user's input are escaped, as Prisma
+ * escaped them: a search for "100%" must match the literal text.
+ */
+function containsInsensitive(column: PgColumn, value: string): SQL {
+  return ilike(column, `%${value.replace(/[\\%_]/g, '\\$&')}%`);
+}
+
 export async function GET(request: NextRequest) {
   try {
     console.log('API: Fetching shops...');
@@ -73,32 +85,27 @@ export async function GET(request: NextRequest) {
     const lat = searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : null;
     const lng = searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : null;
 
-    let shops;
+    let result;
     try {
-      shops = await prisma.shop.findMany({
-        where: {
-          isActive: true,
-          ...(category &&
-            category !== 'ALL' && { category: category as 'ELECTRONICS' | 'CLOTHING' | 'SHOES' }),
-          ...(search && {
-            OR: [
-              { name: { contains: search, mode: 'insensitive' } },
-              { description: { contains: search, mode: 'insensitive' } },
-              { address: { contains: search, mode: 'insensitive' } },
-            ],
-          }),
-          ...(postalCode && {
-            postalCode: { contains: postalCode, mode: 'insensitive' },
-          }),
-        },
-        orderBy: {
-          name: 'asc',
-        },
+      result = await db.query.shops.findMany({
+        where: and(
+          eq(shops.isActive, true),
+          category && category !== 'ALL' ? eq(shops.category, category as ShopCategory) : undefined,
+          search
+            ? or(
+                containsInsensitive(shops.name, search),
+                containsInsensitive(shops.description, search),
+                containsInsensitive(shops.address, search),
+              )
+            : undefined,
+          postalCode ? containsInsensitive(shops.postalCode, postalCode) : undefined,
+        ),
+        orderBy: asc(shops.name),
       });
     } catch (dbError) {
       console.warn('Database unavailable, using mock data:', dbError);
       // Filter mock shops based on search criteria
-      shops = mockShops.filter((shop) => {
+      result = mockShops.filter((shop) => {
         if (category && category !== 'ALL' && shop.category !== category) return false;
         if (
           search &&
@@ -113,7 +120,7 @@ export async function GET(request: NextRequest) {
 
     // Filter by radius if coordinates are provided
     if (lat && lng && radius) {
-      shops = shops.filter((shop) => {
+      result = result.filter((shop) => {
         if (!shop.latitude || !shop.longitude) return false;
 
         const distance = calculateDistance(lat, lng, shop.latitude, shop.longitude);
@@ -121,8 +128,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    console.log(`API: Found ${shops.length} shops`);
-    return NextResponse.json(shops);
+    console.log(`API: Found ${result.length} shops`);
+    return NextResponse.json(result);
   } catch (error) {
     console.error('API Error fetching shops:', error);
     // Final fallback - return mock data
@@ -166,8 +173,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const shop = await prisma.shop.create({
-      data: {
+    const [shop] = await db
+      .insert(shops)
+      .values({
         name,
         description,
         address,
@@ -179,8 +187,8 @@ export async function POST(request: NextRequest) {
         category,
         latitude,
         longitude,
-      },
-    });
+      })
+      .returning();
 
     return NextResponse.json(shop, { status: 201 });
   } catch (error) {

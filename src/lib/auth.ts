@@ -1,11 +1,14 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
-import { prisma } from './db';
+import { db } from './db';
+import { users } from './db/schema';
 
+// No database adapter: with the credentials provider and JWT sessions, NextAuth
+// never persists sessions or accounts — the old PrismaAdapter was wired up but
+// unused. All user lookups go through Drizzle below.
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -18,10 +21,8 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
+        const user = await db.query.users.findFirst({
+          where: eq(users.email, credentials.email),
         });
 
         if (!user) {

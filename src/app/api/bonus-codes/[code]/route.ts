@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/db';
+import { eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { bonusCodes } from '@/lib/db/schema';
 import { authOptions } from '@/lib/auth';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
@@ -11,22 +13,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     // For shop verification, allow access without authentication
     if (verify) {
-      const bonusCode = await prisma.bonusCode.findUnique({
-        where: {
-          code: resolvedParams.code.toUpperCase(),
-        },
-        include: {
-          user: {
-            select: {
-              name: true,
-              email: true,
-            },
-          },
-          shop: {
-            select: {
-              name: true,
-            },
-          },
+      const bonusCode = await db.query.bonusCodes.findFirst({
+        where: eq(bonusCodes.code, resolvedParams.code.toUpperCase()),
+        with: {
+          user: { columns: { name: true, email: true } },
+          shop: { columns: { name: true } },
         },
       });
 
@@ -44,32 +35,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const bonusCode = await prisma.bonusCode.findUnique({
-      where: {
-        code: resolvedParams.code,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        shop: {
-          select: {
-            name: true,
-            category: true,
-          },
-        },
-        order: {
-          select: {
-            id: true,
-            total: true,
-            status: true,
-            description: true,
-          },
-        },
+    const bonusCode = await db.query.bonusCodes.findFirst({
+      where: eq(bonusCodes.code, resolvedParams.code),
+      with: {
+        user: { columns: { id: true, name: true, email: true } },
+        shop: { columns: { name: true, category: true } },
+        order: { columns: { id: true, total: true, status: true, description: true } },
       },
     });
 
@@ -108,10 +79,8 @@ export async function PATCH(
     const body = await request.json();
     const { action } = body;
 
-    const bonusCode = await prisma.bonusCode.findUnique({
-      where: {
-        code: resolvedParams.code,
-      },
+    const bonusCode = await db.query.bonusCodes.findFirst({
+      where: eq(bonusCodes.code, resolvedParams.code),
     });
 
     if (!bonusCode) {
@@ -136,21 +105,14 @@ export async function PATCH(
         return NextResponse.json({ error: 'Bonus code expired' }, { status: 400 });
       }
 
-      const updatedBonusCode = await prisma.bonusCode.update({
-        where: {
-          code: resolvedParams.code,
-        },
-        data: {
-          isUsed: true,
-          usedAt: new Date(),
-        },
-        include: {
-          shop: {
-            select: {
-              name: true,
-            },
-          },
-        },
+      await db
+        .update(bonusCodes)
+        .set({ isUsed: true, usedAt: new Date() })
+        .where(eq(bonusCodes.code, resolvedParams.code));
+
+      const updatedBonusCode = await db.query.bonusCodes.findFirst({
+        where: eq(bonusCodes.code, resolvedParams.code),
+        with: { shop: { columns: { name: true } } },
       });
 
       return NextResponse.json(updatedBonusCode);

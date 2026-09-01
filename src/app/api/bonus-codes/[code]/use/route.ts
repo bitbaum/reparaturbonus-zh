@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { bonusCodes } from '@/lib/db/schema';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { getAllowedUploadExtension, MAX_UPLOAD_SIZE_BYTES } from '@/lib/uploads';
@@ -33,17 +35,10 @@ export async function POST(
     }
 
     // Verify bonus code exists and is valid
-    const bonusCode = await prisma.bonusCode.findUnique({
-      where: {
-        code: resolvedParams.code.toUpperCase(),
-      },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
-        },
+    const bonusCode = await db.query.bonusCodes.findFirst({
+      where: eq(bonusCodes.code, resolvedParams.code.toUpperCase()),
+      with: {
+        user: { columns: { name: true, email: true } },
       },
     });
 
@@ -77,27 +72,16 @@ export async function POST(
     await writeFile(filepath, buffer);
 
     // Mark bonus code as used and store file path
-    const updatedBonusCode = await prisma.bonusCode.update({
-      where: {
-        code: resolvedParams.code.toUpperCase(),
-      },
-      data: {
-        isUsed: true,
-        usedAt: new Date(),
-        residenceProofPath: filename,
-      },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
-        },
-        shop: {
-          select: {
-            name: true,
-          },
-        },
+    await db
+      .update(bonusCodes)
+      .set({ isUsed: true, usedAt: new Date(), residenceProofPath: filename })
+      .where(eq(bonusCodes.code, resolvedParams.code.toUpperCase()));
+
+    const updatedBonusCode = await db.query.bonusCodes.findFirst({
+      where: eq(bonusCodes.code, resolvedParams.code.toUpperCase()),
+      with: {
+        user: { columns: { name: true, email: true } },
+        shop: { columns: { name: true } },
       },
     });
 

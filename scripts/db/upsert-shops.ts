@@ -1,5 +1,6 @@
-import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../src/generated/prisma/client';
+import { and, eq } from 'drizzle-orm';
+import { shops } from '../../src/lib/db/schema';
+import { createScriptDb } from './client';
 import { REVAMPIT_SHOP, type SeedShop } from './data/shops';
 
 /**
@@ -7,28 +8,27 @@ import { REVAMPIT_SHOP, type SeedShop } from './data/shops';
  * inserts or updates the real listings below, leaving bonus codes and orders
  * untouched. Run against the live DB to publish/refresh a shop:
  *
- *   DATABASE_URL=... npx tsx prisma/upsert-shops.ts
+ *   DATABASE_URL=... npx tsx scripts/db/upsert-shops.ts
  *
  * Shop has no natural unique key, so we match on (name, postalCode).
  */
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const { db, pool } = createScriptDb();
 
 // Only verified, real shops belong here — never demo placeholders.
 const SHOPS: SeedShop[] = [REVAMPIT_SHOP];
 
 async function upsertShop(shop: SeedShop) {
-  const existing = await prisma.shop.findFirst({
-    where: { name: shop.name, postalCode: shop.postalCode },
-    select: { id: true },
+  const existing = await db.query.shops.findFirst({
+    where: and(eq(shops.name, shop.name), eq(shops.postalCode, shop.postalCode)),
+    columns: { id: true },
   });
 
   if (existing) {
-    await prisma.shop.update({ where: { id: existing.id }, data: shop });
+    await db.update(shops).set(shop).where(eq(shops.id, existing.id));
     console.log(`↻ Updated shop: ${shop.name} (${shop.postalCode})`);
   } else {
-    await prisma.shop.create({ data: shop });
+    await db.insert(shops).values(shop);
     console.log(`✓ Created shop: ${shop.name} (${shop.postalCode})`);
   }
 }
@@ -47,5 +47,5 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await pool.end();
   });
