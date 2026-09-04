@@ -23,14 +23,14 @@ replace). See `README.md` for the product overview.
 ## Commands
 
 ```bash
-npm run dev        # dev server (Turbopack)
-npm run verify     # SSOT gate: format + lint + typecheck + tests — run before every commit
-npm run build      # next build (hermetic, no live DB needed)
-npm run setup      # db:migrate + db:seed (needs a live DATABASE_URL)
+pnpm run dev        # dev server (Turbopack)
+pnpm run verify     # SSOT gate: format + lint + typecheck + tests — run before every commit
+pnpm run build      # next build (hermetic, no live DB needed)
+pnpm run setup      # db:migrate + db:seed (needs a live DATABASE_URL)
 ```
 
-`npm run verify` is the single source of truth for "is this change OK". CI
-(`.github/workflows/ci.yml`) runs `npm run verify`, and gates `npm run build`
+`pnpm run verify` is the single source of truth for "is this change OK". CI
+(`.github/workflows/ci.yml`) runs `pnpm run verify`, and gates `pnpm run build`
 on top. Green verify + build locally ⇒ green CI.
 
 ## Drizzle
@@ -41,8 +41,8 @@ on top. Green verify + build locally ⇒ green CI.
   "normalize" names.
 - Client: `src/lib/db/index.ts` — lazy `pg` Pool + `drizzle()` singleton, the
   single DB door. No codegen: types flow from the schema at typecheck time.
-- Migrations: `drizzle/` (`npm run db:generate` after schema edits; never edit
-  applied migrations). Fresh DBs: `npm run db:migrate`. The live box is
+- Migrations: `drizzle/` (`pnpm run db:generate` after schema edits; never edit
+  applied migrations). Fresh DBs: `pnpm run db:migrate`. The live box is
   reconciled on deploy by fleetcrown's `apply-schema.sh` (forward-only,
   ledgered in `public._deploy_schema_history`, refuses destructive SQL).
 - Seed / data helpers: `scripts/db/seed.ts` (dev reseed, destructive),

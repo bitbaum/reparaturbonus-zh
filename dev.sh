@@ -3,7 +3,7 @@
 echo "🚀 Starting Reparaturbonus development server..."
 
 # Start the development server in background
-npm run dev &
+pnpm run dev &
 DEV_PID=$!
 
 # Wait a moment for server to start

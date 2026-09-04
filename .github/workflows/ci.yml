@@ -1,5 +1,5 @@
 # Golden CI floor — see dotfiles/templates/ci/README.md.
-# reparaturbonus-zh: npm + Drizzle. Gate = verify (format + lint + typecheck +
+# reparaturbonus-zh: pnpm + Drizzle. Gate = verify (format + lint + typecheck +
 # tests) + a full production build. Drizzle has no codegen: types flow from
 # src/lib/db/schema.ts at typecheck time. The build is hermetic: DB-backed
 # pages (/admin, /dashboard) are `force-dynamic` and public pages fetch
@@ -27,17 +27,19 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
+          cache: pnpm
 
       - name: Install
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       # SSOT: format + lint + typecheck + tests, defined once in package.json `verify`.
       - name: Verify
-        run: npm run verify
+        run: pnpm run verify
 
       # Full production build. Hermetic: no live DB needed (dummy DATABASE_URL
       # above). NEXTAUTH_* are dummies just to satisfy config resolution
@@ -46,4 +48,4 @@ jobs:
         env:
           NEXTAUTH_SECRET: ci-dummy-secret
           NEXTAUTH_URL: http://localhost:3000
-        run: npm run build
+        run: pnpm run build

@@ -1,0 +1,13 @@
+# pnpm 11 blocks dependency postinstall scripts by default; these two need
+# their builds: esbuild installs its platform binary, unrs-resolver its
+# native resolver (used by eslint-config-next).
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true
+
+# Carried over from the npm-only package.json "overrides" field (pnpm ignores
+# that field): security pin from PR #114 closing a high-severity Dependabot
+# alert. deepmerge-ts has since left the dependency tree entirely, but the pin
+# stays armed in case a future dep reintroduces it.
+overrides:
+  deepmerge-ts: ^8.0.0
