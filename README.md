@@ -3,13 +3,13 @@
 Connecting Zurich residents with certified repair shops through government-subsidized bonus codes. Repair instead of replace.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15-000.svg)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6.svg)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000.svg)](https://nextjs.org/)
 [![Live](https://img.shields.io/badge/Live-reparaturbonus.orangecat.ch-green.svg)](https://reparaturbonus.orangecat.ch)
 
 ## What It Does
 
-- **Bonus codes**: Stadt Zürich issues CHF 100 repair bonuses -- 8-character codes, 30-day expiry, one per repair
+- **Bonus codes**: Stadt Zürich issues CHF 100 repair bonuses -- 8-character codes, one-month expiry, one per repair
 - **Shop directory**: Searchable by category, text, postal code, or radius (haversine distance calculation)
 - **Three categories**: Elektro/Elektronik, Kleidung, Schuhe -- only these qualify for the city's bonus program
 - **Admin dashboard**: User management, shop approval, bonus tracking, platform statistics
@@ -25,7 +25,7 @@ Connecting Zurich residents with certified repair shops through government-subsi
 
 - `generateBonusCode()`: 8-character alphanumeric, unique validation with retry loop (up to 10 attempts)
 - `calculateBonusAmount()`: Fixed CHF 100 per code
-- `getBonusExpiryDate()`: 30 days from creation
+- `getBonusExpiryDate()`: one month from creation
 - `isValidBonusCode()`: Regex validation before database lookup
 
 The bonus amount was a design decision -- percentage-based (20% of repair cost) was considered and rejected. A flat CHF 100 is simpler to communicate, simpler to implement, and eliminates disputes over repair cost valuation.
@@ -76,8 +76,8 @@ Three enums enforce domain constraints at the database level:
 
 | Layer | Technology |
 |-------|------------|
-| Framework | Next.js 15 (App Router, Turbopack) |
-| Language | TypeScript 5 (strict mode) |
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript 6 (strict mode) |
 | Database | PostgreSQL + Drizzle ORM |
 | Auth | NextAuth.js, JWT, bcryptjs |
 | Styling | Tailwind CSS 4 |
@@ -90,7 +90,7 @@ Three enums enforce domain constraints at the database level:
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+ (CI runs on 24)
 - PostgreSQL
 
 ### Setup
@@ -98,7 +98,7 @@ Three enums enforce domain constraints at the database level:
 ```bash
 git clone https://github.com/bitbaum/reparaturbonus-zh.git
 cd reparaturbonus-zh
-cp .env.example .env.local    # configure DATABASE_URL, NEXTAUTH_SECRET
+# create .env.local with DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL (see below)
 pnpm install
 pnpm run setup                  # apply Drizzle migrations + seed
 pnpm run dev

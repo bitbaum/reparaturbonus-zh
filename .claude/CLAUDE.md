@@ -30,7 +30,7 @@ reparaturbonus-zh/
 
 | Layer | Technology |
 |-------|------------|
-| Framework | Next.js 15 (App Router, Turbopack) |
+| Framework | Next.js 16 (App Router, Turbopack) |
 | Database | PostgreSQL with Drizzle ORM |
 | Auth | NextAuth.js (credentials provider) |
 | Styling | Tailwind CSS |
@@ -49,12 +49,10 @@ pnpm run setup  # Applies Drizzle migrations + seeds data
 pnpm run dev    # Uses Turbopack
 ```
 
-## Default Users (After Seeding)
+## Seed Data
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@reparaturbonus.ch | admin123 |
-| Customer | customer@example.com | customer123 |
+Seeding (`pnpm run db:seed`) creates repair shops only — it creates **no user
+accounts**. Register users via `/auth/signup` (role defaults to `CUSTOMER`).
 
 ## Critical Rules
 
@@ -71,7 +69,7 @@ const allShops = await db.query.shops.findMany();
 // Create
 const [code] = await db
   .insert(bonusCodes)
-  .values({ code: generateCode(), amount: 50, expiresAt, userId })
+  .values({ code: generateBonusCode(), amount: calculateBonusAmount(), expiresAt, userId })
   .returning();
 ```
 
@@ -93,17 +91,18 @@ export async function GET() {
 ### 3. Bonus Code System
 
 - Codes are 8-character alphanumeric
-- Amount = 20% of repair cost (max CHF 50)
-- Codes expire after 1 year
+- Amount = fixed CHF 100 per code (`calculateBonusAmount()` in `src/lib/bonus-codes.ts`)
+- Codes expire one month after creation (`getBonusExpiryDate()`)
 - Validate uniqueness before creating
 
 ### 4. Shop Categories
 
+Only three categories qualify for the city's bonus program (DB enum
+`ShopCategory` in `src/lib/db/schema.ts`; labels in
+`src/lib/constants/categories.ts`):
+
 ```typescript
-type ShopCategory = 
-  | 'ELECTRONICS' | 'CLOTHING' | 'JEWELRY' 
-  | 'WATCHES' | 'APPLIANCES' | 'FURNITURE'
-  | 'SHOES' | 'BAGS' | 'BIKES' | 'OTHER';
+type ShopCategory = 'ELECTRONICS' | 'CLOTHING' | 'SHOES';
 ```
 
 ## Environment Variables
@@ -133,4 +132,4 @@ pnpm run db:studio     # Open Drizzle Studio
 
 ---
 
-**Last Updated**: 2026-01-23
+**Last Updated**: 2026-09-04
