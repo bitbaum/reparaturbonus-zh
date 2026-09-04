@@ -40,13 +40,13 @@ reparaturbonus-zh/
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Setup database
-npm run setup  # Applies Drizzle migrations + seeds data
+pnpm run setup  # Applies Drizzle migrations + seeds data
 
 # Start development
-npm run dev    # Uses Turbopack
+pnpm run dev    # Uses Turbopack
 ```
 
 ## Default Users (After Seeding)
@@ -117,18 +117,18 @@ NEXTAUTH_SECRET="your-secure-random-string"
 ## Don't
 
 - Expose user passwords or sensitive data
-- Skip Drizzle migrations for schema changes (`npm run db:generate` after editing `src/lib/db/schema.ts`)
+- Skip Drizzle migrations for schema changes (`pnpm run db:generate` after editing `src/lib/db/schema.ts`)
 - Hardcode bonus amounts (use constants)
 - Commit .env files
 
 ## Database Commands
 
 ```bash
-npm run db:generate   # Generate SQL migration from schema changes
-npm run db:push       # Push schema to database (dev shortcut)
-npm run db:migrate    # Run migrations
-npm run db:seed       # Seed with sample data
-npm run db:studio     # Open Drizzle Studio
+pnpm run db:generate   # Generate SQL migration from schema changes
+pnpm run db:push       # Push schema to database (dev shortcut)
+pnpm run db:migrate    # Run migrations
+pnpm run db:seed       # Seed with sample data
+pnpm run db:studio     # Open Drizzle Studio
 ```
 
 ---

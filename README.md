@@ -99,9 +99,9 @@ Three enums enforce domain constraints at the database level:
 git clone https://github.com/bitbaum/reparaturbonus-zh.git
 cd reparaturbonus-zh
 cp .env.example .env.local    # configure DATABASE_URL, NEXTAUTH_SECRET
-npm install
-npm run setup                  # apply Drizzle migrations + seed
-npm run dev
+pnpm install
+pnpm run setup                  # apply Drizzle migrations + seed
+pnpm run dev
 ```
 
 ### Environment Variables

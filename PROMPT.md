@@ -19,7 +19,7 @@
 
 - [ ] Criterion 1
 - [ ] Criterion 2
-- [ ] Build passes (`npm run build`)
+- [ ] Build passes (`pnpm run build`)
 - [ ] Database migrations work
 
 ## Constraints
