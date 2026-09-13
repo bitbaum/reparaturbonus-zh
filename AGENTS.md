@@ -43,7 +43,7 @@ on top. Green verify + build locally ⇒ green CI.
   single DB door. No codegen: types flow from the schema at typecheck time.
 - Migrations: `drizzle/` (`pnpm run db:generate` after schema edits; never edit
   applied migrations). Fresh DBs: `pnpm run db:migrate`. The live box is
-  reconciled on deploy by fleetcrown's `apply-schema.sh` (forward-only,
+  reconciled on deploy by loki's `apply-schema.sh` (forward-only,
   ledgered in `public._deploy_schema_history`, refuses destructive SQL).
 - Seed / data helpers: `scripts/db/seed.ts` (dev reseed, destructive),
   `scripts/db/upsert-shops.ts` (prod-safe), `scripts/db/data/`.
