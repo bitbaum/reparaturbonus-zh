@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { ChatBubbleLeftRightIcon, XMarkIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import {
   QuestionMarkCircleIcon,
@@ -19,6 +20,7 @@ interface Message {
 }
 
 export default function RepairChat() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -75,7 +77,7 @@ export default function RepairChat() {
 
         // Redirect to shops page with category filter after a short delay
         setTimeout(() => {
-          window.location.href = `/shops?category=${category.toUpperCase()}`;
+          router.push(`/shops?category=${category.toUpperCase()}`);
         }, 1500);
       }
       setIsTyping(false);

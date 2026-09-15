@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   MapPinIcon,
   PhoneIcon,
@@ -108,6 +109,7 @@ const MANDATORY_FIELDS = {
 } as const;
 
 export default function ShopOnboarding() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -253,7 +255,7 @@ export default function ShopOnboarding() {
             </ul>
           </div>
           <button
-            onClick={() => (window.location.href = '/')}
+            onClick={() => router.push('/')}
             className="bg-indigo-600 text-white px-4 py-3 sm:px-6 sm:py-2 rounded-lg hover:bg-indigo-700 transition-colors"
           >
             Zur Startseite
