@@ -9,6 +9,12 @@ import {
 } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/ui/PageHeader';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import {
+  ALLOWED_UPLOAD_LABEL,
+  ALLOWED_UPLOAD_MIME_TYPES,
+  MAX_UPLOAD_SIZE_BYTES,
+  MAX_UPLOAD_SIZE_MB,
+} from '@/lib/uploads';
 
 interface BonusCode {
   id: string;
@@ -24,6 +30,21 @@ interface BonusCode {
     name: string;
   };
 }
+
+/**
+ * The shop staff member standing at the counter should learn that a file is
+ * unusable when they pick it, not after a pointless upload — so the same
+ * limits the route enforces are checked here, from the same constants.
+ */
+const describeUploadProblem = (file: File): string | null => {
+  if (!ALLOWED_UPLOAD_MIME_TYPES.includes(file.type)) {
+    return `Nicht unterstütztes Dateiformat. Erlaubt sind ${ALLOWED_UPLOAD_LABEL}.`;
+  }
+  if (file.size > MAX_UPLOAD_SIZE_BYTES) {
+    return `Die Datei ist zu gross. Maximal ${MAX_UPLOAD_SIZE_MB} MB.`;
+  }
+  return null;
+};
 
 export default function VerifyPage() {
   const [code, setCode] = useState('');
@@ -68,6 +89,12 @@ export default function VerifyPage() {
   const handleUseCode = async () => {
     if (!bonusCode || !residenceProof) {
       setError('Bitte laden Sie einen Wohnsitznachweis hoch');
+      return;
+    }
+
+    const uploadProblem = describeUploadProblem(residenceProof);
+    if (uploadProblem) {
+      setError(uploadProblem);
       return;
     }
 
@@ -214,14 +241,20 @@ export default function VerifyPage() {
                               <span className="font-semibold">Klicken zum Hochladen</span> oder
                               Datei hierher ziehen
                             </p>
-                            <p className="text-xs text-gray-500">PDF, PNG, JPG (MAX. 5MB)</p>
+                            <p className="text-xs text-gray-500">
+                              {ALLOWED_UPLOAD_LABEL} (MAX. {MAX_UPLOAD_SIZE_MB}MB)
+                            </p>
                           </div>
                           <input
                             id="residenceProof"
                             type="file"
                             className="hidden"
-                            accept=".pdf,.png,.jpg,.jpeg"
-                            onChange={(e) => setResidenceProof(e.target.files?.[0] || null)}
+                            accept={ALLOWED_UPLOAD_MIME_TYPES.join(',')}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0] || null;
+                              setResidenceProof(file);
+                              setError(file ? (describeUploadProblem(file) ?? '') : '');
+                            }}
                           />
                         </label>
                       </div>
