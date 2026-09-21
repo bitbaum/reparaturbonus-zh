@@ -4,7 +4,12 @@ import { db } from '@/lib/db';
 import { bonusCodes } from '@/lib/db/schema';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
-import { getAllowedUploadExtension, MAX_UPLOAD_SIZE_BYTES } from '@/lib/uploads';
+import {
+  ALLOWED_UPLOAD_LABEL,
+  getAllowedUploadExtension,
+  MAX_UPLOAD_SIZE_BYTES,
+  MAX_UPLOAD_SIZE_MB,
+} from '@/lib/uploads';
 
 export async function POST(
   request: NextRequest,
@@ -22,14 +27,14 @@ export async function POST(
     const extension = getAllowedUploadExtension(residenceProof.type);
     if (!extension) {
       return NextResponse.json(
-        { error: 'Unsupported file type. Please upload a PDF, JPEG, or PNG.' },
+        { error: `Unsupported file type. Allowed formats: ${ALLOWED_UPLOAD_LABEL}.` },
         { status: 400 },
       );
     }
 
     if (residenceProof.size > MAX_UPLOAD_SIZE_BYTES) {
       return NextResponse.json(
-        { error: 'File is too large. Maximum size is 10 MB.' },
+        { error: `File is too large. Maximum size is ${MAX_UPLOAD_SIZE_MB} MB.` },
         { status: 400 },
       );
     }
