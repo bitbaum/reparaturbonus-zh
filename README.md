@@ -2,7 +2,7 @@
 
 Connecting Zurich residents with certified repair shops through government-subsidized bonus codes. Repair instead of replace.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](#license)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000.svg)](https://nextjs.org/)
 [![Live](https://img.shields.io/badge/Live-reparaturbonus.orangecat.ch-green.svg)](https://reparaturbonus.orangecat.ch)
@@ -145,7 +145,7 @@ scripts/db/           # Seed + prod-safe shop upsert
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).
 
 ---
 
