@@ -13,8 +13,8 @@ replace). See `README.md` for the product overview.
 
 | Layer | Technology |
 |-------|------------|
-| Framework | Next.js 15 (App Router, Turbopack, `output: "standalone"`) |
-| Language | TypeScript 5 (strict) |
+| Framework | Next.js 16 (App Router, Turbopack, `output: "standalone"`) |
+| Language | TypeScript 6 (strict) |
 | Database | PostgreSQL + Drizzle ORM (`drizzle-orm/node-postgres`, `pg` Pool) |
 | Auth | NextAuth.js (credentials, JWT, bcryptjs) |
 | Styling | Tailwind CSS 4 |
