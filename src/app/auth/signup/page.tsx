@@ -49,12 +49,6 @@ export default function SignUp() {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Passwort muss mindestens 6 Zeichen lang sein');
-      setLoading(false);
-      return;
-    }
-
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
@@ -167,7 +161,7 @@ export default function SignUp() {
           id="password"
           autoComplete="new-password"
           label="Passwort"
-          placeholder="Mindestens 6 Zeichen"
+          placeholder="Passwort"
           value={formData.password}
           onChange={handleChange}
         />
