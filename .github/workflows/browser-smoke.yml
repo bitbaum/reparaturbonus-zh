@@ -1,0 +1,107 @@
+name: Browser smoke
+
+# The account journey in real Chromium, against the production server and a
+# PostgreSQL migrated the way the box is: 0000, a person registered the
+# NextAuth way, then 0001 (the AccountKit tables and the import). The
+# rehearsal applies 0001 twice and checks the counts. scripts/auth/journey.mjs
+# then signs that person in with their old password, and signs a new one up,
+# out and in, refuses a wrong password, recovers a password and checks every
+# way in on the sign-in page. Synthetic people and keys only; no mail leaves
+# (the Resend key is fake, so delivery fails and the link is read from the
+# database). The fleet's shared-package gate needs this workflow for any change
+# to @bitbaum/accountkit.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: browser-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  account:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: journey
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U app -d journey"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://app:app@127.0.0.1:5432/journey
+      REHEARSAL_URL: postgres://app:app@127.0.0.1:5432/rehearsal
+      NEXT_TELEMETRY_DISABLED: '1'
+      LEGACY_EMAIL: Legacy-Person@Example.test
+      LEGACY_PASSWORD: synthetic nextauth-era password
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Rehearse the import twice on a throwaway database
+        run: |
+          psql "$DATABASE_URL" -qc 'CREATE DATABASE rehearsal'
+          DATABASE_URL="$REHEARSAL_URL" pnpm run db:rehearse-accountkit
+
+      - name: Migrate as the box does, with a NextAuth-era account in between
+        run: |
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -q -f drizzle/0000_high_piledriver.sql
+          node scripts/db/seed-legacy-user.mjs
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -q --single-transaction -f drizzle/0001_accountkit_accounts.sql
+
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm run build
+      - name: Assemble the standalone server
+        run: |
+          cp -r .next/static .next/standalone/.next/static
+          cp -r public .next/standalone/public
+
+      - name: Account journey at phone and desktop widths
+        env:
+          NODE_ENV: production
+          PORT: '3000'
+          HOSTNAME: 127.0.0.1
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+          # The secret name the box has held since NextAuth; lib/auth.ts reads it
+          # when no BETTER_AUTH_SECRET is set, as on the box today.
+          NEXTAUTH_SECRET: synthetic-journey-secret-at-least-32-characters
+          RESEND_API_KEY: re_ci_synthetic
+          RESEND_FROM: Reparaturbonus <noreply@orangecat.ch>
+          ORANGECAT_OAUTH_CLIENT_ID: synthetic
+          ORANGECAT_OAUTH_CLIENT_SECRET: synthetic-secret
+          SIGNIN_ISSUER: https://signin.example.test
+          SIGNIN_CLIENT_ID: synthetic
+          SIGNIN_CLIENT_SECRET: synthetic-secret
+          EXPECT_OIDC: '1'
+          BASE_URL: http://localhost:3000
+        run: |
+          (cd .next/standalone && node server.js > ../../server.log 2>&1 &)
+          for i in $(seq 60); do curl -sf -o /dev/null http://localhost:3000/auth/signin && break; sleep 1; done
+          pnpm run test:auth-journey
+
+      - name: Keep screenshots and the server log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: account-journey
+          path: |
+            browser-smoke-artifacts/
+            server.log
+          retention-days: 14
+          if-no-files-found: warn

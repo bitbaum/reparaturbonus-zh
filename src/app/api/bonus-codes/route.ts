@@ -1,21 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { desc, eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { bonusCodes, orders, shops } from '@/lib/db/schema';
-import { authOptions } from '@/lib/auth';
+import { getAccount } from '@/lib/auth';
 import { generateBonusCode, calculateBonusAmount, getBonusExpiryDate } from '@/lib/bonus-codes';
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getAccount();
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const codes = await db.query.bonusCodes.findMany({
-      where: eq(bonusCodes.userId, (session.user as { id?: string }).id!),
+      where: eq(bonusCodes.userId, session.user.id),
       with: {
         shop: { columns: { name: true } },
         order: { columns: { id: true, total: true, status: true } },
@@ -32,7 +31,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getAccount();
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -92,7 +91,7 @@ export async function POST(request: NextRequest) {
         .values({
           total: repairCost,
           description: description || 'Repair service',
-          userId: (session.user as { id?: string }).id!,
+          userId: session.user.id,
           shopId: shopId,
           status: 'COMPLETED',
         })
@@ -106,7 +105,7 @@ export async function POST(request: NextRequest) {
         code: bonusCode,
         amount: bonusAmount,
         expiresAt: expiryDate,
-        userId: (session.user as { id?: string }).id!,
+        userId: session.user.id,
         shopId: shopId,
         orderId: orderRecord?.id,
       })

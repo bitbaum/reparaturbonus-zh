@@ -26,3 +26,4 @@ yarn.lock
 # green, which breaks the one rule that verify has to keep.
 .claude/worktrees
 .claude/settings.local.json
+browser-smoke-artifacts

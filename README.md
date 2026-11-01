@@ -79,7 +79,7 @@ Three enums enforce domain constraints at the database level:
 | Framework | Next.js 16 (App Router, Turbopack) |
 | Language | TypeScript 6 (strict mode) |
 | Database | PostgreSQL + Drizzle ORM |
-| Auth | NextAuth.js, JWT, bcryptjs |
+| Auth | `@bitbaum/accountkit` (better-auth): password, sign-in link, passkey, two-step codes, recovery, OrangeCat, the shared sign-in |
 | Styling | Tailwind CSS 4 |
 | Deployment | Self-hosted (Hetzner, Caddy, Next.js standalone) |
 
@@ -98,7 +98,7 @@ Three enums enforce domain constraints at the database level:
 ```bash
 git clone https://github.com/bitbaum/reparaturbonus-zh.git
 cd reparaturbonus-zh
-# create .env.local with DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL (see below)
+# create .env.local with DATABASE_URL and BETTER_AUTH_SECRET (see below)
 pnpm install
 pnpm run setup                  # apply Drizzle migrations + seed
 pnpm run dev
@@ -109,8 +109,11 @@ pnpm run dev
 | Variable | Purpose |
 |----------|---------|
 | `DATABASE_URL` | PostgreSQL connection string |
-| `NEXTAUTH_SECRET` | Session signing key |
-| `NEXTAUTH_URL` | Application URL |
+| `BETTER_AUTH_SECRET` | Session signing key, 32+ characters (`NEXTAUTH_SECRET` is read when it is unset) |
+| `NEXT_PUBLIC_APP_URL` | Application URL (sign-in links, passkeys) |
+| `RESEND_API_KEY` | Account mail: the sign-in link and recovery are offered only with it |
+| `ORANGECAT_OAUTH_CLIENT_ID` / `_SECRET` | "Weiter mit OrangeCat", shown once set |
+| `SIGNIN_ISSUER` / `SIGNIN_CLIENT_ID` / `SIGNIN_CLIENT_SECRET` | Google, Apple, GitHub, X and Facebook through the shared sign-in, shown once set |
 
 </details>
 
@@ -132,7 +135,7 @@ src/
     layout/           # Header, Footer
     shop/             # Shop-specific components
   lib/
-    auth.ts           # NextAuth config + JWT strategy
+    auth.ts           # AccountKit runtime, getAccount() with the role from users
     bonus-codes.ts    # Code generation, validation, expiry
     db/               # Drizzle client (lazy singleton) + schema (SSOT for types)
     constants/        # Routes + categories (SSOT)

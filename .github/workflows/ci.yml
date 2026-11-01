@@ -59,10 +59,7 @@ jobs:
         run: pnpm run verify
 
       # Full production build. Hermetic: no live DB needed (dummy DATABASE_URL
-      # above). NEXTAUTH_* are dummies just to satisfy config resolution
-      # during the build.
+      # above). Accounts are built on first request, never at import, so the
+      # build needs no session secret.
       - name: Build
-        env:
-          NEXTAUTH_SECRET: ci-dummy-secret
-          NEXTAUTH_URL: http://localhost:3000
         run: pnpm run build

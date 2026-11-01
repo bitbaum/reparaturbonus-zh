@@ -7,7 +7,8 @@ import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import SessionProviderWrapper from '@/components/providers/session-provider';
+import AccountProvider from '@/components/providers/account-provider';
+import '@bitbaum/accountkit/styles.css';
 import { SITE_NAME, SITE_URL } from '@/lib/constants/site';
 import { ROUTES } from '@/lib/constants/routes';
 import { getPublicPage } from '@/lib/constants/page-metadata';
@@ -47,13 +48,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <SessionProviderWrapper>
+        <AccountProvider>
           <div className="min-h-screen flex flex-col">
             <Header />
             <main className="flex-1 pt-16">{children}</main>
             <Footer />
           </div>
-        </SessionProviderWrapper>
+        </AccountProvider>
 
         {/* Loki feedback widget — env-gated, see docs/architecture/feedback-widget.md */}
         {process.env.NEXT_PUBLIC_FC_WIDGET_TOKEN && (

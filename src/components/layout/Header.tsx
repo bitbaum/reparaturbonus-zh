@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
+import { useAccount } from '@/components/providers/account-provider';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { ROUTES } from '@/lib/constants/routes';
@@ -27,18 +27,7 @@ function currentPage(pathname: string | null, href: string): 'page' | undefined 
 }
 
 export default function Header() {
-  // Temporarily disable session for build - add error handling
-  let session = null;
-  let status = 'unauthenticated';
-
-  try {
-    const sessionData = useSession();
-    session = sessionData.data;
-    status = sessionData.status;
-  } catch {
-    // Session provider not available during build
-    console.log('Session provider not available');
-  }
+  const { data: session, status, signOut } = useAccount();
 
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -56,7 +45,7 @@ export default function Header() {
   }, []);
 
   const handleSignOut = () => {
-    signOut({ callbackUrl: ROUTES.HOME });
+    void signOut(ROUTES.HOME);
   };
 
   const toggleMobileMenu = () => {
@@ -245,8 +234,7 @@ export default function Header() {
                   Dashboard
                 </Link>
 
-                {(session?.user as { role?: string })?.role === 'ADMIN' ||
-                (session?.user as { role?: string })?.role === 'SUPER_ADMIN' ? (
+                {session?.user.role === 'ADMIN' || session?.user.role === 'SUPER_ADMIN' ? (
                   <Link
                     href={ROUTES.ADMIN}
                     aria-current={currentPage(pathname, ROUTES.ADMIN)}
@@ -259,13 +247,13 @@ export default function Header() {
                 ) : null}
 
                 <div className="flex items-center space-x-2 lg:space-x-4">
-                  <span
-                    className={`text-gray-700 transition-all duration-300 hidden lg:inline ${
-                      scrolled ? 'text-sm' : 'text-sm'
-                    }`}
+                  <Link
+                    href={ROUTES.ACCOUNT}
+                    aria-current={currentPage(pathname, ROUTES.ACCOUNT)}
+                    className="text-gray-700 hover:text-brand text-sm transition-colors duration-200 whitespace-nowrap"
                   >
-                    Willkommen, {session?.user?.name}
-                  </span>
+                    {session.user.name ? `Konto: ${session.user.name}` : 'Konto'}
+                  </Link>
                   <button
                     onClick={handleSignOut}
                     className={`text-gray-700 hover:text-brand font-medium transition-all duration-200 whitespace-nowrap ${
@@ -351,8 +339,7 @@ export default function Header() {
                     Dashboard
                   </Link>
 
-                  {(session?.user as { role?: string })?.role === 'ADMIN' ||
-                  (session?.user as { role?: string })?.role === 'SUPER_ADMIN' ? (
+                  {session?.user.role === 'ADMIN' || session?.user.role === 'SUPER_ADMIN' ? (
                     <Link
                       href={ROUTES.ADMIN}
                       aria-current={currentPage(pathname, ROUTES.ADMIN)}
@@ -364,7 +351,14 @@ export default function Header() {
                   ) : null}
 
                   <div className="border-t border-gray-200 pt-4">
-                    <p className="text-gray-700 text-sm mb-2">Willkommen, {session?.user?.name}</p>
+                    <Link
+                      href={ROUTES.ACCOUNT}
+                      aria-current={currentPage(pathname, ROUTES.ACCOUNT)}
+                      className="block text-gray-700 hover:text-brand text-sm py-2"
+                      onClick={closeMobileMenu}
+                    >
+                      {session.user.name ? `Konto: ${session.user.name}` : 'Konto'}
+                    </Link>
                     <button
                       onClick={() => {
                         handleSignOut();

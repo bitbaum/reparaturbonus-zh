@@ -1,6 +1,6 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
+import { useAccount } from '@/components/providers/account-provider';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -9,7 +9,7 @@ interface AdminAuthGuardProps {
 }
 
 export default function AdminAuthGuard({ children }: AdminAuthGuardProps) {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useAccount();
   const router = useRouter();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function AdminAuthGuard({ children }: AdminAuthGuardProps) {
       return;
     }
 
-    const userRole = (session.user as { role?: string })?.role;
+    const userRole = session.user.role;
     if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
       router.push('/dashboard');
       return;
@@ -42,7 +42,7 @@ export default function AdminAuthGuard({ children }: AdminAuthGuardProps) {
     return null;
   }
 
-  const userRole = (session.user as { role?: string })?.role;
+  const userRole = session.user.role;
   if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
     return null;
   }

@@ -6,10 +6,14 @@ export const ROUTES = {
   SHOP_ONBOARDING: '/shop-onboarding',
   DASHBOARD: '/dashboard',
   ADMIN: '/admin',
+  /** One's own account: passkeys, two-step codes, password, sign-in methods. */
+  ACCOUNT: '/konto',
   VERIFY: '/verify',
   AUTH: {
     SIGNIN: '/auth/signin',
     SIGNUP: '/auth/signup',
+    /** Where a sign-in lands: admins to the console, everyone else to the dashboard. */
+    CONTINUE: '/auth/continue',
   },
   API: {
     SHOPS: '/api/shops',
@@ -32,7 +36,7 @@ export const PUBLIC_ROUTES = [
   ROUTES.AUTH.SIGNUP,
 ] as const;
 
-export const PROTECTED_ROUTES = [ROUTES.DASHBOARD] as const;
+export const PROTECTED_ROUTES = [ROUTES.DASHBOARD, ROUTES.ACCOUNT] as const;
 
 export const ADMIN_ROUTES = [ROUTES.ADMIN] as const;
 
@@ -43,4 +47,10 @@ export const ADMIN_ROUTES = [ROUTES.ADMIN] as const;
  * covers `/admin` and everything under it) and by the per-segment
  * `robots: { index: false }` metadata that backs it up.
  */
-export const NOINDEX_PATH_PREFIXES = [ROUTES.ADMIN, ROUTES.DASHBOARD, '/api', '/auth'] as const;
+export const NOINDEX_PATH_PREFIXES = [
+  ROUTES.ADMIN,
+  ROUTES.DASHBOARD,
+  ROUTES.ACCOUNT,
+  '/api',
+  '/auth',
+] as const;

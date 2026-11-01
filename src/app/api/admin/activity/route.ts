@@ -1,19 +1,18 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { and, desc, eq, isNotNull } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { bonusCodes, shops, users } from '@/lib/db/schema';
-import { authOptions } from '@/lib/auth';
+import { getAccount } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getAccount();
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userRole = (session.user as { role?: string })?.role;
+    const userRole = session.user.role;
     if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }

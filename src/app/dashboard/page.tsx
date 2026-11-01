@@ -4,7 +4,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useAccount } from '@/components/providers/account-provider';
 import { useRouter } from 'next/navigation';
 import {
   GiftIcon,
@@ -35,16 +35,7 @@ interface BonusCode {
 }
 
 export default function Dashboard() {
-  // Add error handling for session provider
-  let session = null;
-  let status = 'unauthenticated';
-  try {
-    const sessionData = useSession();
-    session = sessionData.data;
-    status = sessionData.status;
-  } catch {
-    console.log('Session provider not available in dashboard');
-  }
+  const { data: session, status } = useAccount();
 
   const router = useRouter();
   const [bonusCodes, setBonusCodes] = useState<BonusCode[]>([]);

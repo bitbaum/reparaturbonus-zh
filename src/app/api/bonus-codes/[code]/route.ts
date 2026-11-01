@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { bonusCodes } from '@/lib/db/schema';
-import { authOptions } from '@/lib/auth';
+import { getAccount } from '@/lib/auth';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
   try {
@@ -29,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // Original authenticated access for users
-    const session = await getServerSession(authOptions);
+    const session = await getAccount();
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -49,8 +48,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // Check if user is authorized to view this bonus code
-    const userRole = (session.user as { role?: string; id?: string }).role;
-    const isOwner = bonusCode.userId === (session.user as { id?: string }).id;
+    const userRole = session.user.role;
+    const isOwner = bonusCode.userId === session.user.id;
     const isAdmin = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
 
     if (!isOwner && !isAdmin) {
@@ -70,7 +69,7 @@ export async function PATCH(
 ) {
   try {
     const resolvedParams = await params;
-    const session = await getServerSession(authOptions);
+    const session = await getAccount();
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -88,8 +87,8 @@ export async function PATCH(
     }
 
     // Check authorization
-    const userRole = (session.user as { role?: string; id?: string }).role;
-    const isOwner = bonusCode.userId === (session.user as { id?: string }).id;
+    const userRole = session.user.role;
+    const isOwner = bonusCode.userId === session.user.id;
     const isAdmin = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
 
     if (!isOwner && !isAdmin) {
