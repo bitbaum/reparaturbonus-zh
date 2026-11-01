@@ -55,7 +55,7 @@ replace). See `README.md` for the product overview.
 | Framework | Next.js 16 (App Router, Turbopack, `output: "standalone"`) |
 | Language | TypeScript 6 (strict) |
 | Database | PostgreSQL + Drizzle ORM (`drizzle-orm/node-postgres`, `pg` Pool) |
-| Auth | NextAuth.js (credentials, JWT, bcryptjs) |
+| Auth | `@bitbaum/accountkit` (better-auth), tables `auth_*` beside `users` |
 | Styling | Tailwind CSS 4 |
 | Deploy | Self-hosted (Hetzner, Caddy) — `reparaturbonus.orangecat.ch` |
 
@@ -98,8 +98,26 @@ is why `verify` runs as its own gate.
 
 ## Environment
 
-Copy `.env.example` → `.env.local` and set `DATABASE_URL`, `NEXTAUTH_SECRET`,
-`NEXTAUTH_URL`. Never commit `.env*` files or print secrets.
+Create `.env.local` with `DATABASE_URL` and `BETTER_AUTH_SECRET` (32+
+characters; `NEXTAUTH_SECRET` is read when it is unset). The sign-in methods
+that need more appear once their env is set: see README "Environment
+Variables". Never commit `.env*` files or print secrets.
+
+## Accounts
+
+`src/lib/auth.ts` runs `@bitbaum/accountkit`. Its tables carry the `auth_`
+prefix because `users` is this product's own; the shared user id is
+`users.id`, and `users.role` alone says who is an admin, read on every request
+by `getAccount()`. Pages use AccountKit's screens (`src/components/auth/
+AccountScreens.tsx`); client components read the person from `useAccount()`.
+
+`drizzle/0001_accountkit_accounts.sql` imported every NextAuth account under
+its own id with its bcrypt hash (`legacyBcrypt` verifies it). It is
+re-runnable. `pnpm run db:rehearse-accountkit` replays it twice on a
+throwaway database and prints counts; `.github/workflows/browser-smoke.yml`
+runs that and `scripts/auth/journey.mjs` (an imported account signing in,
+sign-up, sign-out, a wrong password, recovery, admin routing) on every pull
+request.
 
 ## Conventions
 

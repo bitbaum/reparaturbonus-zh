@@ -17,6 +17,7 @@
  */
 
 import { createId } from '@paralleldrive/cuid2';
+import { createAuthTables } from '@bitbaum/accountkit/auth/schema';
 import { relations } from 'drizzle-orm';
 import {
   boolean,
@@ -63,7 +64,13 @@ export const users = pgTable(
     id: id(),
     email: text('email').notNull(),
     name: text('name'),
-    password: text('password').notNull(),
+    /**
+     * The NextAuth-era bcrypt hash. Sign-in no longer reads it: the hash was
+     * copied into `auth_accounts` by drizzle/0001 and AccountKit verifies it
+     * there. New people have none (NULL), so the column stays only so the
+     * deploy never has to drop data.
+     */
+    password: text('password'),
     role: userRoleEnum('role').notNull().default('CUSTOMER'),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -183,6 +190,23 @@ export const bonusCodesRelations = relations(bonusCodes, ({ one }) => ({
   shop: one(shops, { fields: [bonusCodes.shopId], references: [shops.id] }),
   order: one(orders, { fields: [bonusCodes.orderId], references: [orders.id] }),
 }));
+
+/**
+ * Accounts (@bitbaum/accountkit): sign-in, passkeys, two-factor, the emailed
+ * link, recovery, OrangeCat and the shared sign-in. Under the `auth_` prefix
+ * because this database already has its own `users`. The shared user id IS
+ * `users.id`, so orders and bonus codes never move; `users.role` stays the one
+ * source for who is an admin.
+ */
+export const authTables = createAuthTables('auth_');
+export const {
+  user: authUsers,
+  session: authSessions,
+  account: authAccounts,
+  verification: authVerifications,
+  passkey: authPasskeys,
+  twoFactor: authTwoFactors,
+} = authTables;
 
 export type User = typeof users.$inferSelect;
 export type Shop = typeof shops.$inferSelect;

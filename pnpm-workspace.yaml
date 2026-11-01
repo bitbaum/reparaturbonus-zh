@@ -14,3 +14,10 @@ overrides:
   # major the parents already allow; pnpm does not re-resolve these on update.
   'vite@8': '^8.2.4'
   deepmerge-ts: ^8.0.0
+
+# pnpm refuses packages younger than its minimum release age. The fleet's own
+# packages are exempt by name, like in every other fleet product: we publish
+# them, and the fleet rollout gate (canary first) is their age check.
+minimumReleaseAgeExclude:
+  - '@bitbaum/accountkit'
+  - '@bitbaum/mail-kit'

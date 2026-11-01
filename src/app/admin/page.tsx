@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useAccount } from '@/components/providers/account-provider';
 import AdminAuthGuard from '@/components/admin/auth-guard';
 
 // Disable static generation for this page
@@ -32,14 +32,7 @@ interface RecentActivity {
 }
 
 export default function AdminDashboard() {
-  // Add error handling for session provider
-  let session = null;
-  try {
-    const sessionData = useSession();
-    session = sessionData.data;
-  } catch {
-    console.log('Session provider not available in admin');
-  }
+  const { data: session } = useAccount();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -122,7 +115,7 @@ export default function AdminDashboard() {
                 <p className="mt-1 text-gray-600">
                   Willkommen zurück, {session?.user?.name}!
                   <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                    {(session?.user as { role?: string })?.role}
+                    {session?.user.role}
                   </span>
                 </p>
               </div>

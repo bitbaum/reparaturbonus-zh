@@ -33,7 +33,7 @@ reparaturbonus-zh/
 |-------|------------|
 | Framework | Next.js 16 (App Router, Turbopack) |
 | Database | PostgreSQL with Drizzle ORM |
-| Auth | NextAuth.js (credentials provider) |
+| Auth | `@bitbaum/accountkit` (see `AGENTS.md`, "Accounts") |
 | Styling | Tailwind CSS |
 | Language | TypeScript |
 
@@ -76,14 +76,13 @@ const [code] = await db
 
 ### 2. Authentication
 
-Use NextAuth.js with role-based access:
+Read the person and their role with `getAccount()` (`src/lib/auth.ts`):
 ```typescript
-// Check role in API route
-import { getServerSession } from 'next-auth';
+import { getAccount, isAdmin } from '@/lib/auth';
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (session?.user?.role !== 'ADMIN') {
+  const account = await getAccount();
+  if (!isAdmin(account)) {
     return Response.json({ error: 'Unauthorized' }, { status: 403 });
   }
 }
@@ -110,8 +109,8 @@ type ShopCategory = 'ELECTRONICS' | 'CLOTHING' | 'SHOES';
 
 ```bash
 DATABASE_URL="postgresql://username:password@localhost:5432/reparaturbonus_zh"
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secure-random-string"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+BETTER_AUTH_SECRET="at-least-32-random-characters"
 ```
 
 ## Don't
