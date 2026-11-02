@@ -28,9 +28,6 @@ export default async function SignInPage({
       marketing={<SignInMarketing />}
       title="Anmelden"
       subtitle="Melden Sie sich bei Ihrem Konto an"
-      switchPrompt="Noch kein Konto?"
-      switchHref={signUpHref}
-      switchLabel="Jetzt registrieren"
     >
       {accountsReady() ? (
         <ReparaturSignIn

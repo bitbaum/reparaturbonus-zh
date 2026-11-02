@@ -29,9 +29,6 @@ export default async function SignUpPage({
       marketing={<SignUpMarketing />}
       title="Konto erstellen"
       subtitle="Eröffnen Sie jetzt ein Konto"
-      switchPrompt="Bereits ein Konto?"
-      switchHref={signInHref}
-      switchLabel="Jetzt anmelden"
     >
       <Link
         href={ROUTES.SHOP_ONBOARDING}

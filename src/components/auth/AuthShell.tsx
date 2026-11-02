@@ -3,25 +3,20 @@ import Link from 'next/link';
 
 /**
  * The one auth page layout: marketing column on the left, a white card on the
- * right, a "switch to the other page" line under the card and a way home.
- * Sign-in and sign-up were two hand-copied versions of this; the copy that
- * differs between them is passed in, the chrome is not.
+ * right and a way home. Sign-in and sign-up were two hand-copied versions of
+ * this; the copy that differs between them is passed in, the chrome is not.
+ * The line that switches to the other page belongs to AccountKit's form, the
+ * same line on every fleet app, so the card does not repeat it.
  */
 export function AuthShell({
   marketing,
   title,
   subtitle,
-  switchPrompt,
-  switchHref,
-  switchLabel,
   children,
 }: {
   marketing: ReactNode;
   title: string;
   subtitle: string;
-  switchPrompt: string;
-  switchHref: string;
-  switchLabel: string;
   children: ReactNode;
 }) {
   return (
@@ -42,18 +37,6 @@ export function AuthShell({
               </div>
 
               {children}
-
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <p className="text-center text-sm text-gray-600">
-                  {switchPrompt}{' '}
-                  <Link
-                    href={switchHref}
-                    className="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors"
-                  >
-                    {switchLabel}
-                  </Link>
-                </p>
-              </div>
             </div>
 
             {/* Return to homepage link */}
