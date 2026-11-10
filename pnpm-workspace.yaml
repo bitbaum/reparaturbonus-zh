@@ -15,9 +15,12 @@ overrides:
   'vite@8': '^8.2.4'
   deepmerge-ts: ^8.0.0
 
-# pnpm refuses packages younger than its minimum release age. The fleet's own
-# packages are exempt by name, like in every other fleet product: we publish
-# them, and the fleet rollout gate (canary first) is their age check.
+# Our own packages are published by our own tagged workflows; minimumReleaseAge
+# would refuse each fresh publish until it ages. One scope glob covers every
+# @bitbaum package; the four unscoped ones are named (fleet SHARED.md).
 minimumReleaseAgeExclude:
-  - '@bitbaum/accountkit'
-  - '@bitbaum/mail-kit'
+  - '@bitbaum/*'
+  - limitkit
+  - bip-kit
+  - threadkit
+  - ai-forms
